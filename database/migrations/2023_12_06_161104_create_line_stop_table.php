@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStopsTable extends Migration
+class CreateLineStopTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateStopsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stops', function (Blueprint $table) {
+        Schema::create('line_stop', function (Blueprint $table) {
             $table->id();
-            $table->integer('broj_stanice')->unique();
-            $table->string('ulica');                       
+
+            $table->foreignId('line_id')->constrained();        
+            $table->foreignId('stop_id')->constrained();
+
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateStopsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stops');
+        Schema::dropIfExists('line_stop');
     }
 }

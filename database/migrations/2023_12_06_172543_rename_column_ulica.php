@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateStopsTable extends Migration
+class RenameColumnUlica extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateStopsTable extends Migration
      */
     public function up()
     {
-        Schema::create('stops', function (Blueprint $table) {
-            $table->id();
-            $table->integer('broj_stanice')->unique();
-            $table->string('ulica');                       
-            $table->timestamps();
+        Schema::table('stops', function (Blueprint $table) {
+            $table->renameColumn('ulica', 'naziv');
         });
     }
 
@@ -28,6 +25,8 @@ class CreateStopsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('stops');
+        Schema::table('stops', function (Blueprint $table) {
+            //$table->renameColumn('naziv', 'ulica');
+        });
     }
 }

@@ -17,7 +17,7 @@ class Stop extends Model
         return $this->hasMany(Line::class, 'id', 'poslednja_stanica');
     }
 
-    public function lines() {
+    public function lines(){
         return $this->belongsToMany(Line::class);
     }
 }

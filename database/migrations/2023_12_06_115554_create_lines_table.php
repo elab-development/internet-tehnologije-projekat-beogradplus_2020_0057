@@ -16,10 +16,7 @@ class CreateLinesTable extends Migration
         Schema::create('lines', function (Blueprint $table) {
             $table->id();
             $table->integer('broj_linije')->unique();
-            $table->foreignId('pocetna_stanica');
-            $table->foreign('pocetna_stanica')->references('id')->on('lines');
-            $table->foreignId('poslednja_stanica');
-            $table->foreign('poslednja_stanica')->references('id')->on('lines');
+            $table->string('napomena')->nullable(); 
             $table->timestamps();
         });
     }
