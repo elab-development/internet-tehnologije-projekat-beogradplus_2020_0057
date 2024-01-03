@@ -9,6 +9,12 @@ class Vehicle extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'trenutna_stanica',
+        'linija',
+        'tip',
+    ];
+
     public function current_stop() {
         return $this->hasMany(Stop::class, 'trenutna_stanica');
     }

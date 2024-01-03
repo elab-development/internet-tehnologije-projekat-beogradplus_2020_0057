@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Stop;
 use Illuminate\Database\Seeder;
 
 class StopSeeder extends Seeder
@@ -13,6 +14,6 @@ class StopSeeder extends Seeder
      */
     public function run()
     {
-        //
+        Stop::factory()->count(50)->create();    
     }
 }

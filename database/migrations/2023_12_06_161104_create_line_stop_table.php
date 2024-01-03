@@ -14,12 +14,12 @@ class CreateLineStopTable extends Migration
     public function up()
     {
         Schema::create('line_stop', function (Blueprint $table) {
-            $table->id();
+
 
             $table->foreignId('line_id')->constrained();        
             $table->foreignId('stop_id')->constrained();
+            $table->integer('rb'); 
 
-            $table->timestamps();
         });
     }
 

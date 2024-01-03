@@ -10,7 +10,9 @@ class Line extends Model
     use HasFactory;
 
     protected $fillable = [
-        'broj_linije'
+        'broj_linije',
+        'pocetna_stanica',
+        'poslednja_stanica',
     ];
 
     public function stop(){
@@ -18,6 +20,6 @@ class Line extends Model
     }
 
     public function stops(){
-        return $this->belongsToMany(Stop::class);
+        return $this->belongsToMany(Stop::class)->withPivot(['rb']);
     }
 }
