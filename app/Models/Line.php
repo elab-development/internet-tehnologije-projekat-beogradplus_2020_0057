@@ -15,11 +15,11 @@ class Line extends Model
         'poslednja_stanica',
     ];
 
-    public function stop(){
-        return $this->belongsTo(Stop::class);
-    }
-
     public function stops(){
         return $this->belongsToMany(Stop::class)->withPivot(['rb']);
+    }
+
+    public function vehicles(){
+        return $this->hasMany(Vehicle::class, 'linija');
     }
 }

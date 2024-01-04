@@ -15,14 +15,15 @@ class Stop extends Model
     ];
 
     public function pocetna() {
-        return $this->hasMany(Line::class, 'id', 'pocetna_stanica');
+        return $this->hasMany(Line::class, 'pocetna_stanica');
     }
 
     public function poslednja() {
-        return $this->hasMany(Line::class, 'id', 'poslednja_stanica');
+        return $this->hasMany(Line::class, 'poslednja_stanica');
     }
 
     public function lines(){
         return $this->belongsToMany(Line::class)->withPivot(['rb']);
     }
+
 }

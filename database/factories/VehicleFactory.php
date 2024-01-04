@@ -15,9 +15,12 @@ class VehicleFactory extends Factory
      */
     public function definition()
     {
+        // izaberi liniju
+        $line = Line::inRandomOrder()->first();
         return [
-            'trenutna_stanica' => Stop::inRandomOrder()->first()->id, // promeniti da bude stanica na liniji
-            'linija' => Line::inRandomOrder()->first()->id,
+            'linija' => $line->id,
+            // izaberi stanicu na toj liniji
+            'trenutna_stanica' => $line->stops()->inRandomOrder()->first()->id,             
             'tip' => $this->faker->numberBetween(1,3),
         ];
     }
