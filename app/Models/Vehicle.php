@@ -16,10 +16,10 @@ class Vehicle extends Model
     ];
 
     public function current_stop() {
-        return $this->hasMany(Stop::class, 'trenutna_stanica');
+        return $this->belongsTo(Stop::class, 'trenutna_stanica');
     }
 
     public function line() {
-        return $this->hasMany(Line::class, 'linija');
+        return $this->belongsTo(Line::class, 'linija');
     }
 }
