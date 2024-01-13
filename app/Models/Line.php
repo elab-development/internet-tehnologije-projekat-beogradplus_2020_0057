@@ -13,6 +13,7 @@ class Line extends Model
         'broj_linije',
         'pocetna_stanica',
         'poslednja_stanica',
+        'napomena'
     ];
 
     public function pocetna() {

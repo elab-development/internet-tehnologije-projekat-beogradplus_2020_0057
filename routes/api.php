@@ -36,7 +36,10 @@ Route::group(['prefix'=> '/usr'], function () {
 Route::group(['prefix'=> 'admin'], function () {
     Route::apiResource('/vehicle', VehicleController::class);
 
-    Route::patch('line/{line}', [LinesController::class,'line_change']);
+    Route::post('stop', [StopsController::class, 'store']);
+    // TODO promeni broj_linije u string
+    Route::patch('line/{line}', [LinesController::class,'patch_line']);
+
 });
 
 

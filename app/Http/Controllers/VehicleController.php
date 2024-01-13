@@ -98,9 +98,9 @@ class VehicleController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'trenutna_stanica'  => 'required|exists:App\Models\Stop,id',
-            'tip' => 'required|exists:vehicle_type,id',
-            'linija' => 'required|exists:App\Models\Line,id',
+            'trenutna_stanica'  => 'exists:App\Models\Stop,id',
+            'tip' => 'exists:vehicle_type,id',
+            'linija' => 'exists:App\Models\Line,id',
         ]);
 
         if ($validator->fails()) {
@@ -114,14 +114,10 @@ class VehicleController extends Controller
             return response()->json(["message"=> "Vozilo nije nadjeno."],404);
         }
 
-        $vehicle->trenutna_stanica = $request->trenutna_stanica;
-        $vehicle->tip = $request->tip;
-        $vehicle->linija = $request->linija;
-
-        $vehicle->save();
+        $vehicle->update($request->all());        
 
         return response()->json([
-            'message'=> 'Vehicle updated',
+            'message'=> 'Vozilo azurirano',
             'vehicle' => new VehicleResource($vehicle)
         ]);
     }

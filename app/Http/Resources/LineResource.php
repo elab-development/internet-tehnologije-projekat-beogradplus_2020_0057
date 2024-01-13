@@ -20,6 +20,7 @@ class LineResource extends JsonResource
             'putanja' => $this->pocetna->naziv.' - '.$this->poslednja->naziv,
             'pocetna_stanica' => new StopResource($this->pocetna),
             'poslednja_stanica' => new StopResource($this->poslednja),
+            'napomena' => $this->napomena
         ];
     }
 }

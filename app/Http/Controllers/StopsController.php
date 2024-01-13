@@ -9,6 +9,7 @@ use App\Models\Line;
 use App\Models\Stop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class StopsController extends Controller
 {
@@ -35,6 +36,26 @@ class StopsController extends Controller
             $data[] = new LineResource($line);
         }
         return response()->json($data);
+    }
+
+    public function store(Request $request) {
+        $validator = Validator::make($request->all(), [
+            'broj_stanice'  => 'required|unique:App\Models\Stop,broj_stanice',
+            'naziv' => 'required|max:50',            
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'error'=> $validator->errors()->first(),
+            ]);
+        }
+
+        $stop = Stop::create($request->all());
+        return response()->json([
+            'message' => 'Stanica dodata.',
+            'stop' => new StopResource($stop)            
+        ]);
+
     }
 
     public function vehicles(Stop $stop)
