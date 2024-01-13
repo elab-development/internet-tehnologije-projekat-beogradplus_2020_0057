@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\LineResource;
 use App\Http\Resources\StopResource;
+use App\Http\Resources\VehicleResource;
 use App\Models\Line;
 use Illuminate\Http\Request;
 
@@ -31,6 +32,14 @@ class LinesController extends Controller
                 'rb' => $stop->pivot->rb,
                 'stanica' => new StopResource($stop)
             ];
+        };
+        return $data;
+    }
+
+    public function vehicles(Line $line) {
+        $data = [];
+        foreach ($line->vehicles as $vehicle) {
+            $data[] = new VehicleResource($vehicle);
         };
         return $data;
     }

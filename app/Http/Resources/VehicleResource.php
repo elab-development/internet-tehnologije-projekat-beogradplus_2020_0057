@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class VehicleResource extends JsonResource
 {
@@ -16,7 +17,7 @@ class VehicleResource extends JsonResource
     {
         return [
             "id"=> $this->id,
-            "tip" => $this->tip,
+            "tip" => $this->tip,            
             "trenutna_stanica" => new StopResource ($this->current_stop)
         ];
     }

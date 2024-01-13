@@ -8,15 +8,17 @@ use App\Http\Resources\VehicleResource;
 use App\Models\Line;
 use App\Models\Stop;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StopsController extends Controller
 {
     public function index()
-    {   
-        $data = []; 
+    {
+        $data = [];
         foreach (Stop::All() as $stop) {
             $data[] = new StopResource($stop);
-        };
+        }
+    
         return $data;
     }
 
@@ -28,7 +30,7 @@ class StopsController extends Controller
     public function lines(Stop $stop)
     {
         $data = [];
-        
+
         foreach ($stop->lines as $line) {
             $data[] = new LineResource($line);
         }
@@ -51,22 +53,22 @@ class StopsController extends Controller
                 $trenutna_rb = $line->stops->find($vehicle->current_stop)->pivot->rb;
 
                 $vehicles_data[] = [
-                    'id'=> $vehicle->id,
-                    'tip'=> $vehicle->tip,
-                    'trenutna_rb'=> $trenutna_rb,
+                    'id' => $vehicle->id,
+                    'tip' => $vehicle->tip,                    
+                    'rb_trenutne' => $trenutna_rb,
                     'udaljenost' => $stop_rb - $trenutna_rb,
-                    'trenutna_stanica' => new StopResource ($vehicle->current_stop),                    
+                    'trenutna_stanica' => new StopResource($vehicle->current_stop),
                 ];
             }
 
             // sortiramo vozila po udaljenosti
-            usort($vehicles_data, function($a, $b) {
+            usort($vehicles_data, function ($a, $b) {
                 return $a['udaljenost'] <=> $b['udaljenost'];
             });
 
-            $data[] = [                
+            $data[] = [
                 'linija' => new LineResource($line),
-                'stop_rb' => $stop_rb,
+                'rb_stanice' => $stop_rb,
                 'vozila' => $vehicles_data
             ];
         }
@@ -74,4 +76,4 @@ class StopsController extends Controller
         return $data;
     }
 
- }
+}

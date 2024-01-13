@@ -20,14 +20,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/stop', [StopsController::class, 'index']);
-Route::get('/stop/{stop}', [StopsController::class, 'show']);
-Route::get('/stop/{stop}/lines', [StopsController::class, 'lines']);
-Route::get('/stop/{stop}/vehicles', [StopsController::class, 'vehicles']);
+Route::group(['prefix'=> '/usr'], function () {
+    Route::get('/stop', [StopsController::class, 'index']);
+    Route::get('/stop/{stop}', [StopsController::class, 'show']);
+    Route::get('/stop/{stop}/lines', [StopsController::class, 'lines']);
+    Route::get('/stop/{stop}/vehicles', [StopsController::class, 'vehicles']);
 
-Route::get('/line', [LinesController::class, 'index']);
-Route::get('/line/{line}', [LinesController::class, 'show']);
-Route::get('/line/{line}/stops', [LinesController::class, 'stops']);
+    Route::get('/line', [LinesController::class, 'index']);
+    Route::get('/line/{line}', [LinesController::class, 'show']);
+    Route::get('/line/{line}/stops', [LinesController::class, 'stops']);
+    Route::get('/line/{line}/vehicles', [LinesController::class, 'vehicles']);
+});
+
+
 
 
 
