@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LinesController;
+use App\Http\Controllers\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StopsController;
@@ -30,6 +31,12 @@ Route::group(['prefix'=> '/usr'], function () {
     Route::get('/line/{line}', [LinesController::class, 'show']);
     Route::get('/line/{line}/stops', [LinesController::class, 'stops']);
     Route::get('/line/{line}/vehicles', [LinesController::class, 'vehicles']);
+});
+
+Route::group(['prefix'=> 'admin'], function () {
+    Route::apiResource('/vehicle', VehicleController::class);
+
+    Route::patch('line/{line}', [LinesController::class,'line_change']);
 });
 
 

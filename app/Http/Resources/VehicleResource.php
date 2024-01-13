@@ -17,8 +17,19 @@ class VehicleResource extends JsonResource
     {
         return [
             "id"=> $this->id,
-            "tip" => $this->tip,            
-            "trenutna_stanica" => new StopResource ($this->current_stop)
+            "tip_id" => $this->tip,        
+            "tip" => $this->naziv_tipa($this->tip),
+            "trenutna_stanica" => new StopResource ($this->current_stop),
+            'linija' => new LineResource($this->line)
         ];
+    }
+
+    public function naziv_tipa($tip) {
+        switch ($tip) {
+            case 1: return 'Autobus';
+            case 2: return 'Tramvaj';
+            case 3: return 'Trolejbus';
+            default: return 'Tip ne postoji';
+        }
     }
 }
