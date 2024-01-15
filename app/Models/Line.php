@@ -11,18 +11,10 @@ class Line extends Model
 
     protected $fillable = [
         'kod_linije',
-        'pocetna_stanica',
-        'poslednja_stanica',
+        'naziv_pocetna',
+        'naziv_poslednja',
         'napomena'
     ];
-
-    public function pocetna() {
-        return $this->belongsTo(Stop::class, 'pocetna_stanica');
-    }
-
-    public function poslednja() {
-        return $this->belongsTo(Stop::class, 'poslednja_stanica');
-    }
 
     public function stops(){
         return $this->belongsToMany(Stop::class)->withPivot(['rb', 'smer']);

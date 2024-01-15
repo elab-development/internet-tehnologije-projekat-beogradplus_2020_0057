@@ -14,8 +14,10 @@ class StopFactory extends Factory
     public function definition()
     {
         return [
-            'broj_stanice' => $this->faker->unique()->numberBetween(100,1000),
+            // 'broj_stanice' => $this->faker->unique()->numberBetween(1,1000),
             'naziv' => $this->faker->word(),
+            'latitude' => 0,
+            'longitude' => 0
         ];
     }
 }

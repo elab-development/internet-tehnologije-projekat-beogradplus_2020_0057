@@ -18,6 +18,8 @@ class LineFactory extends Factory
     {
         return [
             'kod_linije' => $this->faker->unique()->numberBetween(1,100),
+            'naziv_pocetna' => $this->faker->word(), 
+            'naziv_poslednja' => $this->faker->word()
         ];
     }
 

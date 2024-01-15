@@ -14,6 +14,10 @@ class StopSeeder extends Seeder
      */
     public function run()
     {
-        Stop::factory()->count(50)->create();    
+        Stop::factory()->count(50)->create(); 
+        foreach (Stop::all()  as $stop) {
+            $s1 = $stop->replicate();
+            $s1->save();
+        }
     }
 }

@@ -17,11 +17,13 @@ class VehicleFactory extends Factory
     {
         // izaberi liniju
         $line = Line::inRandomOrder()->first();
+        $smer = $this->faker->numberBetween(1,2);
         return [
             'linija' => $line->id,
-            // izaberi stanicu na toj liniji
-            'trenutna_stanica' => $line->stops()->inRandomOrder()->first()->id,             
-            'tip' => $this->faker->numberBetween(1,3),
+            'smer' => $smer,
+            // izaberi stanicu na toj liniji i tom smeru
+            'trenutna_stanica' => $line->stops()->where('smer', $smer)->inRandomOrder()->first()->id,             
+            'tip' => $this->faker->numberBetween(1,4),
         ];
     }
 }

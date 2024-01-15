@@ -20,7 +20,7 @@ class LineSeeder extends Seeder
 
         foreach ($lines as $line) {
             // izaberi 5 do 10 stanica
-            $stops = Stop::inRandomOrder()->take(rand(5, 10))->pluck("id")->toArray();
+            $stops = Stop::inRandomOrder()->where('id', '<=', 50)->take(rand(5, 10))->pluck("id")->toArray();
             
             // ubaci u smer napred (1)
             $i = 0;
@@ -33,8 +33,11 @@ class LineSeeder extends Seeder
             // ubaci u smer nazad (2)
             $reverse_stops = array_reverse($stops);
             $i = 0;
-            foreach ($reverse_stops as $stop) {                
-                $line->stops()->attach($stop, ['rb' => $i, 'smer' => 2]);
+            foreach ($reverse_stops as $stop) {    
+                // kopiraj stanicu
+        
+                $stop2 = Stop::all()->where('id', '>', 50)->where('naziv', Stop::find($stop)->naziv);          
+                $line->stops()->attach($stop2, ['rb' => $i, 'smer' => 2]);
                 $i++;
             }
         }
