@@ -17,9 +17,7 @@ class LineFactory extends Factory
     public function definition()
     {
         return [
-            'broj_linije' => $this->faker->unique()->numberBetween(1,100),
-            'pocetna_stanica' => 1,
-            'poslednja_stanica' => 1,
+            'kod_linije' => $this->faker->unique()->numberBetween(1,100),
         ];
     }
 

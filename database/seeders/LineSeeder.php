@@ -21,16 +21,22 @@ class LineSeeder extends Seeder
         foreach ($lines as $line) {
             // izaberi 5 do 10 stanica
             $stops = Stop::inRandomOrder()->take(rand(5, 10))->pluck("id")->toArray();
+            
+            // ubaci u smer napred (1)
             $i = 0;
             foreach ($stops as $stop) {
-                // prikaci izabrane stanice za liniju, i podesi redni broj
-                $line->stops()->attach($stop, ['rb' => $i]);
+                // prikaci izabranu stanicu za liniju, i podesi redni broj
+                $line->stops()->attach($stop, ['rb' => $i, 'smer' => 1]);
                 $i++;
             }
 
-            // podesi pocetnu i poslenju stanicu za liniju
-            $line->update(['pocetna_stanica' => $stops[0]]);
-            $line->update(['poslednja_stanica' => $stops[$i - 1]]);
+            // ubaci u smer nazad (2)
+            $reverse_stops = array_reverse($stops);
+            $i = 0;
+            foreach ($reverse_stops as $stop) {                
+                $line->stops()->attach($stop, ['rb' => $i, 'smer' => 2]);
+                $i++;
+            }
         }
     }
 }

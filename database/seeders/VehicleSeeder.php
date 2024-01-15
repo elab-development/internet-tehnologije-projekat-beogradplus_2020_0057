@@ -15,10 +15,6 @@ class VehicleSeeder extends Seeder
      */
     public function run()
     {
-        // unesi tipove vozila
-        DB::table("vehicle_type")->insert([
-            ['naziv' => 'autobus'], ['naziv' => 'tramvaj'], ['naziv' => 'trolejbus'] ]);
-
         Vehicle::factory()->count(30)->create();
     }
 }
