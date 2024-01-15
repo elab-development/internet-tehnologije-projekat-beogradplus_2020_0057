@@ -10,7 +10,7 @@ class Line extends Model
     use HasFactory;
 
     protected $fillable = [
-        'broj_linije',
+        'kod_linije',
         'pocetna_stanica',
         'poslednja_stanica',
         'napomena'
@@ -25,7 +25,7 @@ class Line extends Model
     }
 
     public function stops(){
-        return $this->belongsToMany(Stop::class)->withPivot(['rb']);
+        return $this->belongsToMany(Stop::class)->withPivot(['rb', 'smer']);
     }
 
     public function vehicles(){

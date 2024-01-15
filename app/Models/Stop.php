@@ -23,7 +23,7 @@ class Stop extends Model
     }
 
     public function lines(){
-        return $this->belongsToMany(Line::class)->withPivot(['rb']);
+        return $this->belongsToMany(Line::class)->withPivot(['rb, smer']);
     }
 
 }
