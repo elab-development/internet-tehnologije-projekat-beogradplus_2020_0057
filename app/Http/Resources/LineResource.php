@@ -16,10 +16,8 @@ class LineResource extends JsonResource
     {
         return [
             "id"=> $this->id,
-            "broj_linije"=> $this->broj_linije,
-            'putanja' => $this->pocetna->naziv.' - '.$this->poslednja->naziv,
-            'pocetna_stanica' => new StopResource($this->pocetna),
-            'poslednja_stanica' => new StopResource($this->poslednja),
+            "kod_linije" => $this->broj_linije,
+            'putanja' => $this->naziv_pocetna.' - '.$this->naziv_poslednja,
             'napomena' => $this->napomena
         ];
     }

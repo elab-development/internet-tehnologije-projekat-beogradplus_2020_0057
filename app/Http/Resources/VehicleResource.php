@@ -29,6 +29,7 @@ class VehicleResource extends JsonResource
             case 1: return 'Autobus';
             case 2: return 'Tramvaj';
             case 3: return 'Trolejbus';
+            case 4: return 'Minibus';
             default: return 'Tip ne postoji';
         }
     }

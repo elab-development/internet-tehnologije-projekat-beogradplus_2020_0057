@@ -15,8 +15,7 @@ class StopResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id" => $this->id,
-            "broj_stanice"=> $this->broj_stanice,
+            "id" => $this->id,            
             "naziv" => $this->naziv
         ];
     }
