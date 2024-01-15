@@ -25,10 +25,10 @@ class LinesController extends Controller
         return new LineResource($line);
     }
 
-    public function stops(Line $line) {
+    public function stops(Line $line, int $smer) {
         $data = [];
 
-        foreach ($line->stops as $stop) {
+        foreach ($line->stops->where("pivot.smer", $smer) as $stop) {
             $data[] = [
                 'rb' => $stop->pivot->rb,
                 'stanica' => new StopResource($stop)
@@ -64,5 +64,9 @@ class LinesController extends Controller
             'message' => 'Linija promenjena',
             'linija' => new LineResource($line)
         ]);
+    }
+
+    public function search(string $search) {        
+        return Line::where('naziv_pocetna','LIKE','%'.$search.'%')->orWhere('naziv_poslednja','LIKE','%'.$search.'%')->get();
     }
 }

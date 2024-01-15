@@ -40,7 +40,7 @@ class StopsController extends Controller
 
     public function store(Request $request) {
         $validator = Validator::make($request->all(), [
-            'broj_stanice'  => 'required|unique:App\Models\Stop,broj_stanice',
+            //'broj_stanice'  => 'required|unique:App\Models\Stop,broj_stanice',
             'naziv' => 'required|max:50',            
         ]);
 
@@ -61,40 +61,45 @@ class StopsController extends Controller
     public function vehicles(Stop $stop)
     {
         $data = [];
+        
+        //uzmi smer na osnovu linija koje staju
+        $smer = $stop->lines->first()->pivot->smer;
 
         foreach ($stop->lines as $line) {
-            $vehicles_data = [];
-
             // redni broj stanice na liniji
-            $stop_rb = $line->stops->find($stop)->pivot->rb;
+            $stop_rb = $line->stops->where('pivot.smer', $smer)->find($stop)->pivot->rb;
 
             // prolazimo kroz vozila na liniji
-            foreach ($line->vehicles as $vehicle) {
+            foreach ($line->vehicles->where('smer', $smer) as $vehicle) {
                 // redni broj trenutne stanice vozila na liniji
-                $trenutna_rb = $line->stops->find($vehicle->current_stop)->pivot->rb;
+                $trenutna_rb = $line->stops->where('pivot.smer', $smer)->find($vehicle->current_stop)->pivot->rb;
 
-                $vehicles_data[] = [
+                $data[] = [
                     'id' => $vehicle->id,
                     'tip' => $vehicle->tip,                    
                     'rb_trenutne' => $trenutna_rb,
                     'udaljenost' => $stop_rb - $trenutna_rb,
                     'trenutna_stanica' => new StopResource($vehicle->current_stop),
+                    'linija' => new LineResource($line),
+                    'rb_stanice' => $stop_rb,
                 ];
             }
 
-            // sortiramo vozila po udaljenosti
-            usort($vehicles_data, function ($a, $b) {
-                return $a['udaljenost'] <=> $b['udaljenost'];
-            });
+            
 
-            $data[] = [
-                'linija' => new LineResource($line),
-                'rb_stanice' => $stop_rb,
-                'vozila' => $vehicles_data
-            ];
         }
+
+        // sortiramo vozila po udaljenosti
+        usort($data, function ($a, $b) {
+            return $a['udaljenost'] <=> $b['udaljenost'];
+        });
 
         return $data;
     }
 
+    public function search(string $search) {
+        return Stop::where('naziv','LIKE','%'.$search.'%')->get();
+    }
 }
+
+

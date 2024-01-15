@@ -29,19 +29,23 @@ Route::group(['prefix'=> '/user'], function () {
 
     Route::get('/line', [LinesController::class, 'index']);
     Route::get('/line/{line}', [LinesController::class, 'show']);
-    Route::get('/line/{line}/stops', [LinesController::class, 'stops']);
+    Route::get('/line/{line}/{smer}/stops', [LinesController::class, 'stops']);
     Route::get('/line/{line}/vehicles', [LinesController::class, 'vehicles']);
+});
+
+Route::group(['prefix'=> 'search'], function () {
+    Route::get('/stop/{naziv}', [StopsController::class,'search']);
+    Route::get('/line/{naziv}', [LinesController::class,'search']);
 });
 
 // samo za ulogovane korisnike
 Route::group([
     'prefix'=> 'admin', 
-    'middleware'=> 'auth'
+    //'middleware'=> 'auth'
     ], function () {
     Route::apiResource('/vehicle', VehicleController::class);
 
     Route::post('stop', [StopsController::class, 'store']);
-    // TODO promeni broj_linije u string
     Route::patch('line/{line}', [LinesController::class,'patch_line']);
 
 });

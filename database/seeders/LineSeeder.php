@@ -34,9 +34,8 @@ class LineSeeder extends Seeder
             $reverse_stops = array_reverse($stops);
             $i = 0;
             foreach ($reverse_stops as $stop) {    
-                // kopiraj stanicu
-        
-                $stop2 = Stop::all()->where('id', '>', 50)->where('naziv', Stop::find($stop)->naziv);          
+                // kopiraj stanicu        
+                $stop2 = Stop::all()->where('id', $stop + 50);          
                 $line->stops()->attach($stop2, ['rb' => $i, 'smer' => 2]);
                 $i++;
             }

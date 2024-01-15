@@ -19,8 +19,9 @@ class VehicleResource extends JsonResource
             "id"=> $this->id,
             "tip_id" => $this->tip,        
             "tip" => $this->naziv_tipa($this->tip),
-            "trenutna_stanica" => new StopResource ($this->current_stop),
-            'linija' => new LineResource($this->line)
+            'linija' => new LineResource($this->line),
+            'smer'=> $this->smer,
+            "trenutna_stanica" => new StopResource ($this->current_stop),            
         ];
     }
 
