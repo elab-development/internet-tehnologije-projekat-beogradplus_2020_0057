@@ -13,6 +13,7 @@ class Vehicle extends Model
         'trenutna_stanica',
         'linija',
         'tip',
+        'smer'
     ];
 
     public function current_stop() {

@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['prefix'=> '/user'], function () {
+Route::group([],function () {
     Route::get('/stop', [StopsController::class, 'index']);
     Route::get('/stop/{stop}', [StopsController::class, 'show']);
     Route::get('/stop/{stop}/lines', [StopsController::class, 'lines']);
@@ -30,9 +30,10 @@ Route::group(['prefix'=> '/user'], function () {
     Route::get('/line', [LinesController::class, 'index']);
     Route::get('/line/{line}', [LinesController::class, 'show']);
     Route::get('/line/{line}/{smer}/stops', [LinesController::class, 'stops']);
-    Route::get('/line/{line}/vehicles', [LinesController::class, 'vehicles']);
+    Route::get('/line/{line}/{smer}/vehicles', [LinesController::class, 'vehicles']);
 });
 
+//search rute
 Route::group(['prefix'=> 'search'], function () {
     Route::get('/stop/{naziv}', [StopsController::class,'search']);
     Route::get('/line/{naziv}', [LinesController::class,'search']);

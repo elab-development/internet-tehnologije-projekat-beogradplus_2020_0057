@@ -84,9 +84,6 @@ class StopsController extends Controller
                     'rb_stanice' => $stop_rb,
                 ];
             }
-
-            
-
         }
 
         // sortiramo vozila po udaljenosti

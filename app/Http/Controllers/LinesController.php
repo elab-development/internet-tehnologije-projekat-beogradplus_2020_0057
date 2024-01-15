@@ -37,9 +37,9 @@ class LinesController extends Controller
         return $data;
     }
 
-    public function vehicles(Line $line) {
+    public function vehicles(Line $line, int $smer) {
         $data = [];
-        foreach ($line->vehicles as $vehicle) {
+        foreach ($line->vehicles->where("smer", $smer) as $vehicle) {
             $data[] = new VehicleResource($vehicle);
         };
         return $data;
@@ -49,7 +49,7 @@ class LinesController extends Controller
     public function patch_line(Request $request, Line $line) {
         $validator = Validator::make($request->all(), [
             'napomena'  => 'required|max:255',
-            'broj_linije' => 'unique:App\Models\Line,broj_linije',
+            'kod_linije' => 'unique:App\Models\Line,kod_linije',
         ]);
 
         if ($validator->fails()) {

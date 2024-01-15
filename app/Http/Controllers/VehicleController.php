@@ -46,6 +46,7 @@ class VehicleController extends Controller
             'trenutna_stanica'  => 'required|exists:App\Models\Stop,id',
             'tip' => 'required|exists:vehicle_type,id',
             'linija' => 'required|exists:App\Models\Line,id',
+            'smer' => 'required|exists:direction,id',
         ]);
 
         if ($validator->fails()) {
@@ -101,6 +102,7 @@ class VehicleController extends Controller
             'trenutna_stanica'  => 'exists:App\Models\Stop,id',
             'tip' => 'exists:vehicle_type,id',
             'linija' => 'exists:App\Models\Line,id',
+            'smer' => 'exists:direction,id',
         ]);
 
         if ($validator->fails()) {
