@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDirectionTable extends Migration
+class AddRoleUsers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateDirectionTable extends Migration
      */
     public function up()
     {
-        Schema::create('directions', function (Blueprint $table) {
-            $table->id();
-            $table->string('naziv');
-            $table->timestamps();
+        Schema::table("users", function (Blueprint $table) {
+            $table->foreignId('role');
         });
     }
 
@@ -27,6 +25,9 @@ class CreateDirectionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('direction');
+        Schema::table("users", function (Blueprint $table) {
+            $table->dropForeign('users_role_foreign');
+            $table->dropColumn('role');
+        });
     }
 }
