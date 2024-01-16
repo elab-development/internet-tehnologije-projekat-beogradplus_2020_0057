@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\LinesController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Http\Request;
@@ -17,39 +18,43 @@ use App\Http\Controllers\StopsController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
-Route::group(['prefix' =>'stop'], function () {
-    Route::get('/', [StopsController::class, 'index']);
-    Route::get('/{stop}', [StopsController::class, 'show']);
-    Route::get('/{stop}/lines', [StopsController::class, 'lines']);
-    Route::get('/{stop}/vehicles', [StopsController::class, 'vehicles']);
-});
-
-Route::group(['prefix' =>'line'], function () {
-    Route::get('/', [LinesController::class, 'index']);
-    Route::get('/{line}', [LinesController::class, 'show']);
-    Route::get('/{line},{smer}/stops', [LinesController::class, 'stops']);
-    Route::get('/{line},{smer}/vehicles', [LinesController::class, 'vehicles']);
-});
-
-//search rute
-Route::group(['prefix'=> 'search'], function () {
-    Route::get('/stop/{naziv}', [StopsController::class,'search']);
-    Route::get('/line/{naziv}', [LinesController::class,'search']);
-});
-
-//
-
+// auth
+Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
 
 // samo za ulogovane korisnike
-Route::group([/*'middleware'=> 'auth'*/], function () {
-    Route::apiResource('/vehicle', VehicleController::class);
+Route::group(['middleware'=> 'auth:sanctum'], function () {
+    Route::get('/user', function () { return auth()->user(); });
 
-    Route::post('stop', [StopsController::class, 'store']);
-    Route::patch('line/{line}', [LinesController::class,'patch_line']);
+    Route::group(['prefix' =>'stop'], function () {
+        Route::get('/', [StopsController::class, 'index']);
+        Route::get('/{stop}', [StopsController::class, 'show']);
+        Route::get('/{stop}/lines', [StopsController::class, 'lines']);
+        Route::get('/{stop}/vehicles', [StopsController::class, 'vehicles']);
+    });
+    
+    Route::group(['prefix' =>'line'], function () {
+        Route::get('/', [LinesController::class, 'index']);
+        Route::get('/{line}', [LinesController::class, 'show']);
+        Route::get('/{line},{smer}/stops', [LinesController::class, 'stops']);
+        Route::get('/{line},{smer}/vehicles', [LinesController::class, 'vehicles']);
+    });
+    
+    // search rute
+    Route::group(['prefix'=> 'search'], function () {
+        Route::get('/stop/{naziv}', [StopsController::class,'search']);
+        Route::get('/line/{naziv}', [LinesController::class,'search']);
+    });
+
+
+    // crud rute samo za usere koji su admin
+    Route::group(['middleware'=> 'role:admin'], function () {        
+        Route::apiResource('/vehicle', VehicleController::class);
+            
+        Route::post('stop', [StopsController::class, 'store']);
+        Route::patch('line/{line}', [LinesController::class,'patch_line']);
+    });
 
 });
 

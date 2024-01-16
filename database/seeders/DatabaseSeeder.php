@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Direction;
 use App\Models\Role;
+use App\Models\User;
 use App\Models\VehicleType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,14 @@ class DatabaseSeeder extends Seeder
         // role
         Role::create(['name' => 'user']);
         Role::create(['name' => 'admin']);
+
+        // admin user
+        $admin = User::create([
+            'name' => 'admin',
+            'email' => 'admin@admin.com',
+            'password' => bcrypt('password'),
+        ]);
+        $admin->assignRole('admin');
 
         // tipovi vozila
         VehicleType::create(['naziv' => 'autobus']);
