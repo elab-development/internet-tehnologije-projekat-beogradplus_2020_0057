@@ -16,22 +16,11 @@ class VehicleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id"=> $this->id,
-            "tip_id" => $this->tip,        
-            "tip" => $this->naziv_tipa($this->tip),
+            "id"=> $this->id,            
+            "tip" => new VehicleTypeResource($this->type),
             'linija' => new LineResource($this->line),
-            'smer'=> $this->smer,
+            'smer'=> new DirectionResource($this->direction),
             "trenutna_stanica" => new StopResource ($this->current_stop),            
         ];
-    }
-
-    public function naziv_tipa($tip) {
-        switch ($tip) {
-            case 1: return 'Autobus';
-            case 2: return 'Tramvaj';
-            case 3: return 'Trolejbus';
-            case 4: return 'Minibus';
-            default: return 'Tip ne postoji';
-        }
     }
 }

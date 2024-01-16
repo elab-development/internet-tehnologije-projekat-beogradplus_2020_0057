@@ -14,7 +14,7 @@ class AddForeignSmer extends Migration
     public function up()
     {
         Schema::table("line_stop", function (Blueprint $table) {
-            $table->foreignId('smer')->constrained('direction');
+            $table->foreignId('smer')->constrained('directions');
         });
     }
 

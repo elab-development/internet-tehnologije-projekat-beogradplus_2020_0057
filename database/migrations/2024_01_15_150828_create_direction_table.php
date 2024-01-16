@@ -27,6 +27,6 @@ class CreateDirectionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('direction');
+        Schema::dropIfExists('directions');
     }
 }

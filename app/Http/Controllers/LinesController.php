@@ -67,6 +67,9 @@ class LinesController extends Controller
     }
 
     public function search(string $search) {        
-        return Line::where('naziv_pocetna','LIKE','%'.$search.'%')->orWhere('naziv_poslednja','LIKE','%'.$search.'%')->get();
+        return Line::where('naziv_pocetna','LIKE','%'.$search.'%')
+            ->orWhere('naziv_poslednja','LIKE','%'.$search.'%')
+            ->orWhere('kod_linije','LIKE','%'.$search.'%')
+            ->get();
     }
 }

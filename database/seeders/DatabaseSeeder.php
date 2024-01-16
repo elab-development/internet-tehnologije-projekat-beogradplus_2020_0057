@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Direction;
+use App\Models\Role;
+use App\Models\VehicleType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,17 +17,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {    
+        // role
+        Role::create(['name' => 'user']);
+        Role::create(['name' => 'admin']);
+
         // tipovi vozila
-        DB::table("vehicle_type")->insert([
-            ['naziv' => 'autobus'], 
-            ['naziv' => 'tramvaj'], 
-            ['naziv' => 'trolejbus'],
-            ['naziv' => 'minibus'] ]);
+        VehicleType::create(['naziv' => 'autobus']);
+        VehicleType::create(['naziv' => 'tramvaj']); 
+        VehicleType::create(['naziv' => 'trolejbus']);
+        VehicleType::create(['naziv' => 'minibus'] );
 
         // smerovi
-        DB::table('direction')->insert([
-            ['naziv' => 'napred'], 
-            ['naziv' => 'nazad'] ]);
+        Direction::create(['naziv' => 'napred']);
+        Direction::create(['naziv' => 'nazad']);
 
         $this->call([
             StopSeeder::class,

@@ -65,6 +65,7 @@ class StopsController extends Controller
         //uzmi smer na osnovu linija koje staju
         $smer = $stop->lines->first()->pivot->smer;
 
+        // za sve linije na stanici
         foreach ($stop->lines as $line) {
             // redni broj stanice na liniji
             $stop_rb = $line->stops->where('pivot.smer', $smer)->find($stop)->pivot->rb;
@@ -75,13 +76,10 @@ class StopsController extends Controller
                 $trenutna_rb = $line->stops->where('pivot.smer', $smer)->find($vehicle->current_stop)->pivot->rb;
 
                 $data[] = [
-                    'id' => $vehicle->id,
-                    'tip' => $vehicle->tip,                    
+                    'vozilo' => new VehicleResource($vehicle),
+                    'rb_stanice' => $stop_rb,                 
                     'rb_trenutne' => $trenutna_rb,
-                    'udaljenost' => $stop_rb - $trenutna_rb,
-                    'trenutna_stanica' => new StopResource($vehicle->current_stop),
-                    'linija' => new LineResource($line),
-                    'rb_stanice' => $stop_rb,
+                    'udaljenost' => $stop_rb - $trenutna_rb,                    
                 ];
             }
         }

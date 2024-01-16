@@ -23,4 +23,12 @@ class Vehicle extends Model
     public function line() {
         return $this->belongsTo(Line::class, 'linija');
     }
+
+    public function direction() {
+        return $this->belongsTo(Direction::class,'smer');
+    }
+
+    public function type() {
+        return $this->belongsTo(VehicleType::class,'tip');
+    }
 }

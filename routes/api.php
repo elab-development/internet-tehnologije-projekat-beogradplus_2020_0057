@@ -41,11 +41,11 @@ Route::group(['prefix'=> 'search'], function () {
     Route::get('/line/{naziv}', [LinesController::class,'search']);
 });
 
+//
+
+
 // samo za ulogovane korisnike
-Route::group([
-    'prefix'=> 'admin', 
-    //'middleware'=> 'auth'
-    ], function () {
+Route::group([/*'middleware'=> 'auth'*/], function () {
     Route::apiResource('/vehicle', VehicleController::class);
 
     Route::post('stop', [StopsController::class, 'store']);

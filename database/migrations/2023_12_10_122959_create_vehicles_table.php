@@ -17,7 +17,7 @@ class CreateVehiclesTable extends Migration
             $table->id();
             $table->foreignId('trenutna_stanica')->constrained('stops');
             $table->foreignId('linija')->constrained('lines');
-            $table->foreignId('tip')->constrained('vehicle_type');
+            $table->foreignId('tip')->constrained('vehicle_types');
             $table->timestamps();
         });
     }

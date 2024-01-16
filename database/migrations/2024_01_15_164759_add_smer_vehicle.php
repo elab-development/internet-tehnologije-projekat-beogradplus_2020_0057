@@ -14,7 +14,7 @@ class AddSmerVehicle extends Migration
     public function up()
     {
         Schema::table("vehicles", function (Blueprint $table) {
-            $table->foreignId('smer')->constrained('direction');
+            $table->foreignId('smer')->constrained('directions');
         });
     }
 
