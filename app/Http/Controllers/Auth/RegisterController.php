@@ -78,9 +78,11 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {        
-        if ($this->validator($request->all())->fails()) {            
+        $validator = $this->validator($request->only('username','name','email','password', 'password_confirmation'));
+        
+        if ($validator->fails()) {            
             return response()->json([
-                'error' => $this->validator($request->all())->errors()->first()
+                'error' => $validator->errors()->first()
             ], 400);
         }
 
