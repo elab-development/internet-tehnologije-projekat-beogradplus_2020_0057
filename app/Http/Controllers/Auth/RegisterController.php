@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,6 +52,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'username' => 'required|string|max:255',
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -65,9 +68,33 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
+            'username'=> $data['username'],
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+    }
+
+
+    public function register(Request $request)
+    {        
+        if ($this->validator($request->all())->fails()) {            
+            return response()->json([
+                'error' => $this->validator($request->all())->errors()->first()
+            ], 400);
+        }
+
+        $user = $this->create($request->all());
+
+        $user->assignRole('user');
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'user' => new UserResource($user),
+            'access_token'=> $token,
+            'token_type' => 'Bearer'
+        ]);
+
     }
 }

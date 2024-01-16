@@ -62,11 +62,16 @@ class StopsController extends Controller
     {
         $data = [];
         
+        $stop_lines = $stop->lines;
+        if ($stop_lines->count() == 0) {
+            return response()->json(['message' => 'Nema linija na ovoj stanici']);
+        }
+
         //uzmi smer na osnovu linija koje staju
-        $smer = $stop->lines->first()->pivot->smer;
+        $smer = $stop_lines->first()->pivot->smer;
 
         // za sve linije na stanici
-        foreach ($stop->lines as $line) {
+        foreach ($stop_lines as $line) {
             // redni broj stanice na liniji
             $stop_rb = $line->stops->where('pivot.smer', $smer)->find($stop)->pivot->rb;
 

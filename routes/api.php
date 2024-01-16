@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\LinesController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Http\Request;
@@ -20,8 +24,10 @@ use App\Http\Controllers\StopsController;
 
 
 // auth
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/forgot-password', [ForgotPasswordController::class,'sendResetLink']);
+Route::post('/reset-password', [ResetPasswordController::class,'reset']);
 
 // samo za ulogovane korisnike
 Route::group(['middleware'=> 'auth:sanctum'], function () {
@@ -49,7 +55,7 @@ Route::group(['middleware'=> 'auth:sanctum'], function () {
 
 
     // crud rute samo za usere koji su admin
-    Route::group(['middleware'=> 'role:admin'], function () {        
+    Route::group(['middleware' => 'role:admin'], function () {        
         Route::apiResource('/vehicle', VehicleController::class);
             
         Route::post('stop', [StopsController::class, 'store']);
