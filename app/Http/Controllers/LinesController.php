@@ -13,11 +13,9 @@ class LinesController extends Controller
 {
     public function index() 
     {
-        $data = []; 
-        foreach (Line::All() as $line) {
-            $data[] = new LineResource($line);
-        };
-        return $data;
+        $lines = Line::paginate(5);
+
+        return LineResource::collection($lines);
     }
 
     public function show(Line $line)
@@ -26,23 +24,22 @@ class LinesController extends Controller
     }
 
     public function stops(Line $line, int $smer) {
-        $data = [];
 
+        $data = [];
+        
         foreach ($line->stops->where("pivot.smer", $smer) as $stop) {
             $data[] = [
                 'rb' => $stop->pivot->rb,
                 'stanica' => new StopResource($stop)
             ];
         };
-        return $data;
+        return ['data' => $data];
     }
 
     public function vehicles(Line $line, int $smer) {
-        $data = [];
-        foreach ($line->vehicles->where("smer", $smer) as $vehicle) {
-            $data[] = new VehicleResource($vehicle);
-        };
-        return $data;
+        $vehicles = $line->vehicles->where("smer", $smer);
+
+        return VehicleResource::collection($vehicles);
     }
 
 
@@ -70,6 +67,6 @@ class LinesController extends Controller
         return Line::where('naziv_pocetna','LIKE','%'.$search.'%')
             ->orWhere('naziv_poslednja','LIKE','%'.$search.'%')
             ->orWhere('kod_linije','LIKE','%'.$search.'%')
-            ->get();
+            ->paginate(10);
     }
 }

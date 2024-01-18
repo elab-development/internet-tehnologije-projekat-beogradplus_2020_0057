@@ -7,6 +7,7 @@ use App\Http\Resources\StopResource;
 use App\Http\Resources\VehicleResource;
 use App\Models\Line;
 use App\Models\Stop;
+use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -15,12 +16,9 @@ class StopsController extends Controller
 {
     public function index()
     {
-        $data = [];
-        foreach (Stop::All() as $stop) {
-            $data[] = new StopResource($stop);
-        }
-    
-        return $data;
+        $stops = Stop::paginate(10);
+
+        return StopResource::collection($stops);
     }
 
     public function show(Stop $stop)
@@ -30,17 +28,13 @@ class StopsController extends Controller
 
     public function lines(Stop $stop)
     {
-        $data = [];
-
-        foreach ($stop->lines as $line) {
-            $data[] = new LineResource($line);
-        }
-        return response()->json($data);
+        $lines = $stop->lines()->paginate(10);
+        
+        return LineResource::collection($lines);
     }
 
     public function store(Request $request) {
-        $validator = Validator::make($request->all(), [
-            //'broj_stanice'  => 'required|unique:App\Models\Stop,broj_stanice',
+        $validator = Validator::make($request->all(), [            
             'naziv' => 'required|max:50',            
         ]);
 
@@ -94,11 +88,11 @@ class StopsController extends Controller
             return $a['udaljenost'] <=> $b['udaljenost'];
         });
 
-        return $data;
+        return ['data' => $data];
     }
 
     public function search(string $search) {
-        return Stop::where('naziv','LIKE','%'.$search.'%')->get();
+        return Stop::where('naziv','LIKE','%'.$search.'%')->paginate(10);
     }
 }
 
