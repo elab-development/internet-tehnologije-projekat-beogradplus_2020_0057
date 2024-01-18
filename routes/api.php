@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\LinesController;
+use App\Http\Controllers\StopVehicleController;
 use App\Http\Controllers\VehicleController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,8 @@ Route::group(['middleware'=> 'auth:sanctum'], function () {
         Route::get('/', [StopsController::class, 'index']);
         Route::get('/{stop}', [StopsController::class, 'show']);
         Route::get('/{stop}/lines', [StopsController::class, 'lines']);
-        Route::get('/{stop}/vehicles', [StopsController::class, 'vehicles']);
+        
+        Route::get('/{stop}/vehicles', [StopVehicleController::class, 'vehicles']);
     });
     
     Route::group(['prefix' =>'line'], function () {
