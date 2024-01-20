@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\LinesController;
 use App\Http\Controllers\StopVehicleController;
 use App\Http\Controllers\VehicleController;
@@ -33,8 +34,9 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 // samo za ulogovane korisnike
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user', function () {
-        return auth()->user(); });
-    Route::get('/logout', []);
+        return auth()->user();
+    });
+    Route::get('/logout', [LogoutController::class, 'logout']);
 
     Route::group(['prefix' => 'stop'], function () {
         Route::get('/', [StopsController::class, 'index']);
