@@ -13,7 +13,7 @@ class StopVehicleController extends Controller
     public function vehicles(Stop $stop)
     {
         $data = [];
-        
+
         $stop_lines = $stop->lines;
         if ($stop_lines->count() == 0) {
             return response()->json(['message' => 'Nema linija na ovoj stanici']);
@@ -37,9 +37,9 @@ class StopVehicleController extends Controller
                 if ($udaljenost > 0) {
                     $data[] = [
                         'vozilo' => new VehicleResource($vehicle),
-                        'rb_stanice' => $rb_stanice,                 
+                        'rb_stanice' => $rb_stanice,
                         'rb_trenutne' => $rb_trenutne,
-                        'udaljenost' => $udaljenost,                    
+                        'udaljenost' => $udaljenost,
                     ];
                 }
             }
@@ -50,7 +50,7 @@ class StopVehicleController extends Controller
             return $a['udaljenost'] <=> $b['udaljenost'];
         });
 
-        $data = $this->paginate($data);
+        //$data = $this->paginate($data);
 
         return $data;
     }
@@ -60,9 +60,9 @@ class StopVehicleController extends Controller
         $page = $page ?: (Paginator::resolveCurrentPage($page) ?: 1);
         $total = count($items);
         $currentpage = $page;
-        $offset = ($currentpage * $perPage) - $perPage ;
+        $offset = ($currentpage * $perPage) - $perPage;
         $itemstoshow = array_slice($items, $offset, $perPage);
-        
+
         return new LengthAwarePaginator($itemstoshow, $total, $perPage, $page, [
             'path' => LengthAwarePaginator::resolveCurrentPath(),
             'pageName' => $pageName,
