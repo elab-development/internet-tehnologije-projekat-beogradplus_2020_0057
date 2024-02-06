@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StopSeeder::class,
             LineSeeder::class,
-            //VehicleSeeder::class,
+            VehicleSeeder::class,
         ]);
     }
 }
