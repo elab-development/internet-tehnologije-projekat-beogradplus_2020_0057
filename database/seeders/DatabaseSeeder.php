@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      * @return void
      */
     public function run()
-    {    
+    {
         // role
         Role::create(['name' => 'user']);
         Role::create(['name' => 'admin']);
@@ -32,9 +32,9 @@ class DatabaseSeeder extends Seeder
 
         // tipovi vozila
         VehicleType::create(['naziv' => 'autobus']);
-        VehicleType::create(['naziv' => 'tramvaj']); 
+        VehicleType::create(['naziv' => 'tramvaj']);
         VehicleType::create(['naziv' => 'trolejbus']);
-        VehicleType::create(['naziv' => 'minibus'] );
+        VehicleType::create(['naziv' => 'minibus']);
 
         // smerovi
         Direction::create(['naziv' => 'napred']);
@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StopSeeder::class,
             LineSeeder::class,
-            VehicleSeeder::class,
+            //VehicleSeeder::class,
         ]);
     }
 }

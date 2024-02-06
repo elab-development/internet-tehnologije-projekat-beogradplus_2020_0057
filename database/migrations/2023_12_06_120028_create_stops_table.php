@@ -16,7 +16,8 @@ class CreateStopsTable extends Migration
         Schema::create('stops', function (Blueprint $table) {
             $table->id();
             $table->integer('broj_stanice')->unique();
-            $table->string('ulica');                       
+            $table->string('ulica');
+            $table->bigInteger('node_id');
             $table->timestamps();
         });
     }

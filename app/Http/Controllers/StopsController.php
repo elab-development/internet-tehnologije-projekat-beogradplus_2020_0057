@@ -28,33 +28,33 @@ class StopsController extends Controller
 
     public function lines(Stop $stop)
     {
-        $lines = $stop->lines()->paginate(10);
-        
-        return LineResource::collection($lines);
+        return LineResource::collection($stop->lines);
     }
 
-    public function store(Request $request) {
-        $validator = Validator::make($request->all(), [            
-            'naziv' => 'required|max:50',            
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'naziv' => 'required|max:50',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
-                'error'=> $validator->errors()->first(),
+                'error' => $validator->errors()->first(),
             ]);
         }
 
         $stop = Stop::create($request->all());
         return response()->json([
             'message' => 'Stanica dodata.',
-            'stop' => new StopResource($stop)            
+            'stop' => new StopResource($stop)
         ]);
 
     }
 
-    public function search(string $search) {
-        return Stop::where('naziv','LIKE','%'.$search.'%')
-            ->orWhere('id','LIKE','%'.$search.'%')    
+    public function search(string $search)
+    {
+        return Stop::where('naziv', 'LIKE', '%' . $search . '%')
+            ->orWhere('id', 'LIKE', '%' . $search . '%')
             ->paginate(10);
     }
 }

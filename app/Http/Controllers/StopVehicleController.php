@@ -20,10 +20,11 @@ class StopVehicleController extends Controller
         }
 
         //uzmi smer na osnovu linija koje staju
-        $smer = $stop_lines->first()->pivot->smer;
+        $smer2 = $stop_lines->first()->pivot->smer;
 
         // za sve linije na stanici
         foreach ($stop_lines as $line) {
+            $smer = $line->stops->find($stop)->pivot->smer;
             // redni broj stanice na liniji
             $rb_stanice = $line->stops->where('pivot.smer', $smer)->find($stop)->pivot->rb;
 
@@ -55,7 +56,7 @@ class StopVehicleController extends Controller
         return $data;
     }
 
-    public static function paginate($items, $perPage = 5, $page = null, $pageName = 'page')
+    public static function paginate($items, $perPage = 10, $page = null, $pageName = 'page')
     {
         $page = $page ?: (Paginator::resolveCurrentPage($page) ?: 1);
         $total = count($items);

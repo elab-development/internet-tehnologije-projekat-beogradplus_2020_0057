@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Stop;
+use Exception;
 use Illuminate\Database\Seeder;
 
 class StopSeeder extends Seeder
@@ -14,10 +15,27 @@ class StopSeeder extends Seeder
      */
     public function run()
     {
-        Stop::factory()->count(50)->create(); 
-        foreach (Stop::all()  as $stop) {
-            $s1 = $stop->replicate();
-            $s1->save();
+        $api_url = 'http://overpass-api.de/api/interpreter?data=';
+        $query = '[out:json][timeout:25];area(id:3602728438)->.searchArea;nwr["highway"="bus_stop"](area.searchArea);out;';
+        // collecting results in JSON format
+        $html = file_get_contents($api_url . $query);
+        $result = json_decode($html, true);
+        $data = $result['elements'];
+
+        // save each stop from the given array
+        foreach ($data as $key => $row) {
+            $s = new Stop();
+            try {
+                $s->node_id = $row['id'];
+                $s->id = $row['tags']['ref'];
+                $s->naziv = $row['tags']['name:sr-Latn'];
+                $s->latitude = $row['lat'];
+                $s->longitude = $row['lon'];
+                $s->save();
+            } catch (Exception $e) {
+                echo $e->getMessage();
+                print_r($row);
+            }
         }
     }
 }
