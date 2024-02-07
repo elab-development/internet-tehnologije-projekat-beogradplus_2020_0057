@@ -5,8 +5,6 @@ export default function Dashboard() {
   return (
     // justify-center items-center
     <div className="h-screen w-screen overflow-hidden">
-      <SideBar />
-
       <Map />
       {/* <iframe
         src="https://www.openstreetmap.org/export/embed.html?bbox=20.341701507568363%2C44.759533053369275%2C20.502376556396488%2C44.85343480872422&amp;layer=transportmap"

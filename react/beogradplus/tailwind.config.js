@@ -9,6 +9,7 @@ module.exports = {
   ],
   theme: {
     extend: {
+      
       colors: {
         'blue': {
           light: "#297EFE",
@@ -28,8 +29,6 @@ module.exports = {
           light: "#C9EBC1",
           dark: "#61BF36"
         }
-
-
       }
     },
   },

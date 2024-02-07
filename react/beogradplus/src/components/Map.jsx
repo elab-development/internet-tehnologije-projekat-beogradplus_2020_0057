@@ -3,7 +3,6 @@ import { useMap, MapContainer, TileLayer } from "react-leaflet";
 import "../index.css";
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
-import OverPassLayer from "leaflet-overpass-layer";
 
 function MyComponent() {
   const map = useMap();
