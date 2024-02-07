@@ -35,7 +35,7 @@ class StopVehicleController extends Controller
 
                 $udaljenost = $rb_stanice - $rb_trenutne;
                 // ne prikazujemo vozila koja su prosla datu stanicu
-                if ($udaljenost > 0) {
+                if ($udaljenost >= 0) {
                     $data[] = [
                         'vozilo' => new VehicleResource($vehicle),
                         'rb_stanice' => $rb_stanice,

@@ -13,14 +13,22 @@ class Line extends Model
         'kod_linije',
         'naziv_pocetna',
         'naziv_poslednja',
-        'napomena'
+        'napomena',
+        'tip_vozila',
     ];
 
-    public function stops(){
+    public function stops()
+    {
         return $this->belongsToMany(Stop::class)->withPivot(['rb', 'smer']);
     }
 
-    public function vehicles(){
+    public function vehicles()
+    {
         return $this->hasMany(Vehicle::class, 'linija');
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(VehicleType::class, 'tip_vozila');
     }
 }

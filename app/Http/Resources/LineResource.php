@@ -15,10 +15,11 @@ class LineResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id"=> $this->id,
+            "id" => $this->id,
             "kod_linije" => $this->kod_linije,
             'pocetna' => $this->naziv_pocetna,
             'poslednja' => $this->naziv_poslednja,
+            'tip_vozila' => new VehicleTypeResource($this->type),
             'napomena' => $this->napomena
         ];
     }

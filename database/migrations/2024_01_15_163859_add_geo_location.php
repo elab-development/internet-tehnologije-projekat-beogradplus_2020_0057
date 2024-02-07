@@ -14,10 +14,10 @@ class AddGeoLocation extends Migration
     public function up()
     {
         Schema::table('stops', function (Blueprint $table) {
-            
-            $table->float('latitude');    
-            $table->float('longitude');          
-            
+
+            $table->decimal('latitude', 12, 8);
+            $table->decimal('longitude', 12, 8);
+
         });
     }
 
@@ -29,10 +29,10 @@ class AddGeoLocation extends Migration
     public function down()
     {
         Schema::table('stops', function (Blueprint $table) {
-            
-            $table->dropColumn('latitude');    
-            $table->dropColumn('longitude');          
-            
+
+            $table->dropColumn('latitude');
+            $table->dropColumn('longitude');
+
         });
     }
 }

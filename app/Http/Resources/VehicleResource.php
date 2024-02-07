@@ -16,11 +16,10 @@ class VehicleResource extends JsonResource
     public function toArray($request)
     {
         return [
-            "id"=> $this->id,            
-            "tip" => new VehicleTypeResource($this->type),
+            "id" => $this->id,
             'linija' => new LineResource($this->line),
-            'smer'=> new DirectionResource($this->direction),
-            "trenutna_stanica" => new StopResource ($this->current_stop),            
+            'smer' => new DirectionResource($this->direction),
+            "trenutna_stanica" => new StopResource($this->current_stop),
         ];
     }
 }

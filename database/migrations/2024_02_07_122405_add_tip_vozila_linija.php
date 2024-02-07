@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVehiclesTable extends Migration
+class AddTipVozilaLinija extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateVehiclesTable extends Migration
      */
     public function up()
     {
-        Schema::create('vehicles', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('trenutna_stanica')->constrained('stops');
-            $table->foreignId('linija')->constrained('lines');
-            $table->timestamps();
+        Schema::table("lines", function (Blueprint $table) {
+            $table->foreignId('tip_vozila')->constrained('vehicle_types');
         });
     }
 
@@ -28,6 +25,9 @@ class CreateVehiclesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vehicles');
+        Schema::table("lines", function (Blueprint $table) {
+            $table->dropForeign('lines_tip_vozila_foreign');
+            $table->dropColumn('tip_vozila');
+        });
     }
 }
