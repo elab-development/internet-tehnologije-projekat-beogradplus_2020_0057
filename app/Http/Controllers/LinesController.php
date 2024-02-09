@@ -27,7 +27,7 @@ class LinesController extends Controller
 
     public function stops(Line $line, int $smer)
     {
-        $stops = $line->stops->where("pivot.smer", $smer);
+        $stops = $line->stops->where("pivot.smer", $smer)->toArray();
 
         return $this->paginate($stops);
     }
@@ -42,10 +42,13 @@ class LinesController extends Controller
     public static function paginate($items, $total = null, $perPage = 10, $page = null, $pageName = 'page')
     {
         $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
-
+        $currentpage = $page;
+        $offset = ($currentpage * $perPage) - $perPage;
+        $itemstoshow = array_slice($items, $offset, $perPage);
         return new LengthAwarePaginator(
-            $items->forPage($page, $perPage),
-            $total ?: $items->count(),
+            $itemstoshow,
+            //$items->forPage($page, $perPage),
+            $total ?: count($items),
             $perPage,
             $page,
             [
