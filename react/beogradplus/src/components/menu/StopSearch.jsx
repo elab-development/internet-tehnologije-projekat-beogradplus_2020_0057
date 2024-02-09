@@ -21,8 +21,15 @@ export default function StopSearch(props) {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (searchTerm != "") {
-        axiosClient.get("/search/stop/" + searchTerm).then(({ data }) => {
-          setStops(data);
+        axiosClient.get("/search/stop/" + searchTerm).then((stopsData) => {
+          //axiosClient.get("/line/16,1/stops").then(({ data }) => {
+          //setStops(data);
+          setData({
+            title: data.title,
+            vehicles: data.vehicles,
+            stop: data.stop,
+            stops: stopsData.data,
+          });
         });
       } else setStops(null);
     }, 300);
@@ -34,7 +41,7 @@ export default function StopSearch(props) {
   const openStopVehicles = (stop) => {
     axiosClient.get("/stop/" + stop.id + "/vehicles").then(({ data }) => {
       setMenuOption(2);
-      setData({ title: stop.naziv, vehicles: data, stop });
+      setData({ title: stop.naziv, vehicles: data, stop, stops });
     });
   };
 
@@ -55,8 +62,8 @@ export default function StopSearch(props) {
         w="90%"
       />
       <VStack gap={0} mt={6}>
-        {stops &&
-          stops.data.map((stop) => {
+        {data.stops &&
+          data.stops.data.map((stop) => {
             return (
               <SideMenuItem
                 id={stop.id}

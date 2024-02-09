@@ -32,10 +32,14 @@ export default function LineSearch(props) {
 
   // otvara tab vozila i postavlja podatke o vozilima
   const openLineStops = (line) => {
-    axiosClient.get("/line/" + line.id + ",1/stops").then(({ data2 }) => {
+    axiosClient.get("/line/" + line.id + ",1/stops").then((stopsData) => {
       setMenuOption(0);
-      //setData({ stops: data });
-      console.log(data);
+      setData({
+        title: data.title,
+        vehicles: data.vehicles,
+        stop: data.stop,
+        stops: stopsData.data,
+      });
     });
   };
 
