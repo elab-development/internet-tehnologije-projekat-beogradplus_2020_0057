@@ -7,13 +7,15 @@ use App\Http\Resources\StopResource;
 use App\Http\Resources\VehicleResource;
 use App\Models\Line;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 
 class LinesController extends Controller
 {
     public function index()
     {
-        $lines = Line::paginate(5);
+        $lines = Line::paginate(10);
 
         return LineResource::collection($lines);
     }
@@ -25,17 +27,9 @@ class LinesController extends Controller
 
     public function stops(Line $line, int $smer)
     {
+        $stops = $line->stops->where("pivot.smer", $smer);
 
-        $data = [];
-
-        foreach ($line->stops->where("pivot.smer", $smer) as $stop) {
-            $data[] = [
-                'rb' => $stop->pivot->rb,
-                'stanica' => new StopResource($stop)
-            ];
-        }
-        ;
-        return ['data' => $data];
+        return $this->paginate($stops);
     }
 
     public function vehicles(Line $line, int $smer)
@@ -45,6 +39,21 @@ class LinesController extends Controller
         return VehicleResource::collection($vehicles);
     }
 
+    public static function paginate($items, $total = null, $perPage = 10, $page = null, $pageName = 'page')
+    {
+        $page = $page ?: LengthAwarePaginator::resolveCurrentPage($pageName);
+
+        return new LengthAwarePaginator(
+            $items->forPage($page, $perPage),
+            $total ?: $items->count(),
+            $perPage,
+            $page,
+            [
+                'path' => LengthAwarePaginator::resolveCurrentPath(),
+                'pageName' => $pageName,
+            ]
+        );
+    }
 
     public function patch_line(Request $request, Line $line)
     {
@@ -69,9 +78,10 @@ class LinesController extends Controller
 
     public function search(string $search)
     {
-        return LineResource::collection(Line::where('naziv_pocetna', 'LIKE', '%' . $search . '%')
-            ->orWhere('naziv_poslednja', 'LIKE', '%' . $search . '%')
-            ->orWhere('kod_linije', 'LIKE', '%' . $search . '%')
-            ->paginate(10));
+        $lines = Line::where('kod_linije', 'LIKE', $search . '%')
+            //->orWhere('naziv_pocetna', 'LIKE', '%' . $search . '%')
+            //->orWhere('naziv_poslednja', 'LIKE', '%' . $search . '%')
+            ->paginate(10);
+        return LineResource::collection($lines);
     }
 }

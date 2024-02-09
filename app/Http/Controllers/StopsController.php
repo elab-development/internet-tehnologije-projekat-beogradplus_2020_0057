@@ -54,7 +54,7 @@ class StopsController extends Controller
     public function search(string $search)
     {
         return Stop::where('naziv', 'LIKE', '%' . $search . '%')
-            ->orWhere('id', 'LIKE', '%' . $search . '%')
+            ->orWhere('id', 'LIKE', $search . '%')
             ->paginate(10);
     }
 }
