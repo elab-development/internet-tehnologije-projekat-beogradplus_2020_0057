@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Validator;
 
 class LinesController extends Controller
 {
-    public function index() 
+    public function index()
     {
         $lines = Line::paginate(5);
 
@@ -23,29 +23,33 @@ class LinesController extends Controller
         return new LineResource($line);
     }
 
-    public function stops(Line $line, int $smer) {
+    public function stops(Line $line, int $smer)
+    {
 
         $data = [];
-        
+
         foreach ($line->stops->where("pivot.smer", $smer) as $stop) {
             $data[] = [
                 'rb' => $stop->pivot->rb,
                 'stanica' => new StopResource($stop)
             ];
-        };
+        }
+        ;
         return ['data' => $data];
     }
 
-    public function vehicles(Line $line, int $smer) {
+    public function vehicles(Line $line, int $smer)
+    {
         $vehicles = $line->vehicles->where("smer", $smer);
 
         return VehicleResource::collection($vehicles);
     }
 
 
-    public function patch_line(Request $request, Line $line) {
+    public function patch_line(Request $request, Line $line)
+    {
         $validator = Validator::make($request->all(), [
-            'napomena'  => 'required|max:255',
+            'napomena' => 'required|max:255',
             'kod_linije' => 'unique:App\Models\Line,kod_linije',
         ]);
 
@@ -63,10 +67,11 @@ class LinesController extends Controller
         ]);
     }
 
-    public function search(string $search) {        
-        return Line::where('naziv_pocetna','LIKE','%'.$search.'%')
-            ->orWhere('naziv_poslednja','LIKE','%'.$search.'%')
-            ->orWhere('kod_linije','LIKE','%'.$search.'%')
-            ->paginate(10);
+    public function search(string $search)
+    {
+        return LineResource::collection(Line::where('naziv_pocetna', 'LIKE', '%' . $search . '%')
+            ->orWhere('naziv_poslednja', 'LIKE', '%' . $search . '%')
+            ->orWhere('kod_linije', 'LIKE', '%' . $search . '%')
+            ->paginate(10));
     }
 }

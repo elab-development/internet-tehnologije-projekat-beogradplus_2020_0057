@@ -30,12 +30,6 @@ class DatabaseSeeder extends Seeder
         ]);
         $admin->assignRole('admin');
 
-        // // tipovi vozila
-        // VehicleType::create(['naziv' => 'autobus']);
-        // VehicleType::create(['naziv' => 'tramvaj']);
-        // VehicleType::create(['naziv' => 'trolejbus']);
-        // VehicleType::create(['naziv' => 'minibus']);
-
         // smerovi
         Direction::create(['naziv' => 'napred']);
         Direction::create(['naziv' => 'nazad']);

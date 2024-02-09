@@ -47,16 +47,19 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
-    public function assignRole(string $role) {
+    public function assignRole(string $role)
+    {
         $role = Role::whereName($role)->firstOrFail();
         $this->roles()->sync($role);
     }
 
-    public function hasRole(string $role): bool {
+    public function hasRole(string $role): bool
+    {
         return $this->roles()->whereName($role)->exists();
     }
 
-    public function isAdmin(): bool {
+    public function isAdmin(): bool
+    {
         return $this->hasRole('admin');
     }
 }

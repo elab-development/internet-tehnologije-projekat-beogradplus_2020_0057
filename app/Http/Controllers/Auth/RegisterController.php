@@ -52,7 +52,6 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'username' => 'required|string|max:255',
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -68,7 +67,6 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return User::create([
-            'username'=> $data['username'],
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -77,10 +75,10 @@ class RegisterController extends Controller
 
 
     public function register(Request $request)
-    {        
-        $validator = $this->validator($request->only('username','name','email','password', 'password_confirmation'));
-        
-        if ($validator->fails()) {            
+    {
+        $validator = $this->validator($request->only('name', 'email', 'password', 'password_confirmation'));
+
+        if ($validator->fails()) {
             return response()->json([
                 'error' => $validator->errors()->first()
             ], 400);
@@ -94,7 +92,7 @@ class RegisterController extends Controller
 
         return response()->json([
             'user' => new UserResource($user),
-            'access_token'=> $token,
+            'access_token' => $token,
             'token_type' => 'Bearer'
         ]);
 

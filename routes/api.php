@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\LinesController;
 use App\Http\Controllers\StopVehicleController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\StopsController;
@@ -34,9 +35,9 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 // samo za ulogovane korisnike
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user', function () {
-        return auth()->user();
+        return new UserResource(auth()->user());
     });
-    Route::get('/logout', [LogoutController::class, 'logout']);
+    Route::post('/logout', [LogoutController::class, 'logout']);
 
     Route::group(['prefix' => 'stop'], function () {
         Route::get('/', [StopsController::class, 'index']);
