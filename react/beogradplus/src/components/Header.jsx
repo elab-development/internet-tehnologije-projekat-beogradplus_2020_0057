@@ -11,9 +11,23 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import React from "react";
+import { useStateContext } from "../contexts/ContextProvider";
+import { useNavigate } from "react-router-dom";
+import axiosClient from "../axios-client";
 
-export default function Header(props) {
+export default function Header() {
+  const { user, setToken, setUser } = useStateContext();
+  const navigate = useNavigate();
+
+  const onLogout = (ev) => {
+    ev.preventDefault();
+    axiosClient.post("/logout").then(() => {
+      setUser({});
+      setToken(null);
+    });
+    navigate("/");
+  };
+
   return (
     <div className="absolute inset-0 flex items-center z-10 bg-blue max-h-16 my-3 mx-4 rounded-2xl">
       <Center ml="5">
@@ -23,12 +37,14 @@ export default function Header(props) {
       <Center ml="auto" mr="5">
         <Menu>
           <MenuButton color="white">
-            <Avatar name={props.user.name} />
+            <Avatar name={user.name} />
             <ChevronDownIcon />
           </MenuButton>
           <MenuList>
-            <MenuItem>{props.user.name}</MenuItem>
-            <MenuItem>Log out</MenuItem>
+            <MenuItem>{user.name}</MenuItem>
+            <MenuItem>{user.email}</MenuItem>
+            <MenuItem onClick={() => navigate("/login")}>Change user</MenuItem>
+            <MenuItem onClick={onLogout}>Log out</MenuItem>
           </MenuList>
         </Menu>
       </Center>

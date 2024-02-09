@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Flex,
   Heading,
@@ -15,10 +15,10 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { Link as ChakraLink, LinkProps } from "@chakra-ui/react";
-import { FaLock } from "react-icons/fa";
 import { Link as ReactRouterLink } from "react-router-dom";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
-export default function Password(props) {
+const Password = React.forwardRef((props, ref) => {
   const [showPassword, setShowPassword] = useState(false);
 
   const handleShowClick = () => setShowPassword(!showPassword);
@@ -31,12 +31,13 @@ export default function Password(props) {
           children={props.icon}
         />
         <Input
+          ref={ref}
           type={showPassword ? "text" : "password"}
           placeholder={props.placeholder}
         />
         <InputRightElement width="4.5rem">
           <Button h="1.75rem" size="sm" onClick={handleShowClick}>
-            {showPassword ? "Hide" : "Show"}
+            {showPassword ? <ViewOffIcon /> : <ViewIcon />}
           </Button>
         </InputRightElement>
       </InputGroup>
@@ -47,4 +48,6 @@ export default function Password(props) {
       )}
     </FormControl>
   );
-}
+});
+
+export default Password;

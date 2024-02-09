@@ -8,6 +8,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { RouterProvider } from 'react-router-dom';
 import router from './router';
 import { ContextProvider } from './contexts/ContextProvider';
+import { MenuContextProvider } from './contexts/MenuContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
