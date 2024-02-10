@@ -23,7 +23,18 @@ export default function StopSearch(props) {
     const delayDebounceFn = setTimeout(() => {
       //console.log(data);
       if (searchTerm != "") {
-        paginate("/search/stop/" + searchTerm);
+        //console.log(pageFullUrl);
+        axiosClient.get("/search/stop/" + searchTerm).then((stopsData) => {
+          //console.log(stopsData);
+          setData({
+            title: data.title,
+            vehicles: data.vehicles,
+            stop: null,
+            stops: stopsData.data.paginated,
+            lineStops: null,
+            vehicleType: data.vehicleType,
+          });
+        });
       }
       //else setStops(null);
     }, 300);
@@ -40,6 +51,8 @@ export default function StopSearch(props) {
         vehicles: vehicleData.data,
         stop,
         stops: data.stops,
+        lineStops: data.lineStops,
+        vehicleType: data.vehicleType,
       });
     });
   };
@@ -47,12 +60,13 @@ export default function StopSearch(props) {
   const paginate = (pageFullUrl) => {
     //console.log(pageFullUrl);
     axiosClient.get(pageFullUrl).then((stopsData) => {
-      console.log(stopsData);
+      //console.log(stopsData);
       setData({
         title: data.title,
         vehicles: data.vehicles,
         stop: data.stop,
-        stops: stopsData.data,
+        stops: stopsData.data.paginated,
+        lineStops: data.lineStops,
       });
     });
   };
