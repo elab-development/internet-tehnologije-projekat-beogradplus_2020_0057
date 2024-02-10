@@ -11,27 +11,21 @@ import React, { createRef, useEffect, useState } from "react";
 import axiosClient from "../../axios-client";
 import SideMenuItem from "./SideMenuItem";
 import { useMenuStateContext } from "../../contexts/MenuContext";
+import Pagination from "./Pagination";
 
 export default function StopSearch(props) {
-  const [stops, setStops] = useState();
+  //const [stops, setStops] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const { data, setData, setMenuOption } = useMenuStateContext();
 
   // pretratga stanica sa tajmautom
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
+      //console.log(data);
       if (searchTerm != "") {
-        axiosClient.get("/search/stop/" + searchTerm).then((stopsData) => {
-          //axiosClient.get("/line/16,1/stops").then(({ data }) => {
-          //setStops(data);
-          setData({
-            title: data.title,
-            vehicles: data.vehicles,
-            stop: data.stop,
-            stops: stopsData.data,
-          });
-        });
-      } else setStops(null);
+        paginate("/search/stop/" + searchTerm);
+      }
+      //else setStops(null);
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
@@ -39,9 +33,27 @@ export default function StopSearch(props) {
 
   // otvara tab vozila i postavlja podatke o vozilima
   const openStopVehicles = (stop) => {
-    axiosClient.get("/stop/" + stop.id + "/vehicles").then(({ data }) => {
+    axiosClient.get("/stop/" + stop.id + "/vehicles").then((vehicleData) => {
       setMenuOption(2);
-      setData({ title: stop.naziv, vehicles: data, stop, stops });
+      setData({
+        title: stop.naziv,
+        vehicles: vehicleData.data,
+        stop,
+        stops: data.stops,
+      });
+    });
+  };
+
+  const paginate = (pageFullUrl) => {
+    //console.log(pageFullUrl);
+    axiosClient.get(pageFullUrl).then((stopsData) => {
+      console.log(stopsData);
+      setData({
+        title: data.title,
+        vehicles: data.vehicles,
+        stop: data.stop,
+        stops: stopsData.data,
+      });
     });
   };
 
@@ -75,6 +87,9 @@ export default function StopSearch(props) {
             );
           })}
       </VStack>
+      {data.stops /*&& data.stops.total > 10*/ && (
+        <Pagination metaData={data.stops} onChange={paginate} />
+      )}
     </>
   );
 }

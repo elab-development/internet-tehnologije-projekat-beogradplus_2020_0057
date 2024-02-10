@@ -6,10 +6,6 @@ import * as L from "leaflet";
 
 function MyComponent() {
   const map = useMap();
-  // var opl = new L.OverPassLayer({
-  //   query: "node[highway=bus_stop][ref=446]({{bbox}});out center;",
-  // });
-  // map.addLayer(opl);
 
   var pointA = new L.LatLng(44.8486028, 20.3797339);
   var pointB = new L.LatLng(44.7634302, 20.4982489);

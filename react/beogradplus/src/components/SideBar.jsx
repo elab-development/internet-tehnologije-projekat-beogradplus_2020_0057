@@ -53,7 +53,7 @@ function SideBar() {
         variant="unstyled"
         position="absolute"
         orientation="vertical"
-        w="20rem"
+        w="22rem"
         h="100%"
         defaultIndex={0}
         index={menuOption}
@@ -95,7 +95,11 @@ function SideBar() {
         >
           {data.map((tab, index) => {
             return (
-              <TabPanel key={index} p={0} w="100%">
+              <TabPanel
+                key={index}
+                p={0}
+                className="w-full h-full flex flex-col"
+              >
                 {tab.content}
               </TabPanel>
             );
