@@ -72,23 +72,24 @@ export default function LineSearch(props) {
         w="90%"
       />
       <VStack gap={0} mt={2}>
-        {lines &&
-          lines.data.map((line) => {
-            return (
-              <SideMenuItem
-                kod_linije={line.kod_linije}
-                tip_vozila={line.tip_vozila.naziv}
-                text={
-                  direction === 1
-                    ? line.pocetna + " - " + line.poslednja
-                    : line.poslednja + " - " + line.pocetna
-                }
-                onClick={() => {
-                  openLineStops(line);
-                }}
-              ></SideMenuItem>
-            );
-          })}
+        {lines
+          ? lines.data.map((line) => {
+              return (
+                <SideMenuItem
+                  kod_linije={line.kod_linije}
+                  tip_vozila={line.tip_vozila.naziv}
+                  text={
+                    direction === 1
+                      ? line.pocetna + " - " + line.poslednja
+                      : line.poslednja + " - " + line.pocetna
+                  }
+                  onClick={() => {
+                    openLineStops(line);
+                  }}
+                ></SideMenuItem>
+              );
+            })
+          : "Nije pronadjena linija"}
         <Button my={2} onClick={() => toggleDirection()}>
           Promeni smer
         </Button>

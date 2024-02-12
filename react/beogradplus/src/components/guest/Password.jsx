@@ -43,7 +43,9 @@ const Password = React.forwardRef((props, ref) => {
       </InputGroup>
       {props.forgot && (
         <FormHelperText textAlign="right">
-          <ChakraLink as={ReactRouterLink}>forgot password?</ChakraLink>
+          <ChakraLink as={ReactRouterLink} to="/forgot-password">
+            forgot password?
+          </ChakraLink>
         </FormHelperText>
       )}
     </FormControl>

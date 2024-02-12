@@ -21,8 +21,18 @@ import { useMenuStateContext } from "../contexts/MenuContext";
 import StopSearch from "./menu/StopSearch";
 import Vehicles from "./menu/Vehicles";
 import LineSearch from "./menu/LineSearch";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { useEffect } from "react";
 
 function SideBar() {
+  const [hidden, setHidden] = useState(false);
+
+  function toggleHidden() {
+    setHidden(!hidden);
+    //if (hidden) setMenuOption(null);
+    //console.log(hidden);
+  }
+
   const tabData = [
     {
       name: "stop",
@@ -55,9 +65,10 @@ function SideBar() {
         orientation="vertical"
         w="22rem"
         h="100%"
-        defaultIndex={0}
         index={menuOption}
+        defaultIndex={0}
         onChange={(index) => {
+          setHidden(false);
           console.log(index);
           setMenuOption(index);
         }}
@@ -85,31 +96,54 @@ function SideBar() {
               </Tab>
             );
           })}
+          <Button
+            variant="ghost"
+            w="4rem"
+            h="3rem"
+            borderRadius="1rem"
+            _hover={{
+              bg: "blue.800",
+            }}
+            className="mt-auto text-white w-full"
+            onClick={toggleHidden}
+          >
+            <Icon
+              as={hidden ? ChevronRightIcon : ChevronLeftIcon}
+              boxSize={5}
+              color="white"
+            ></Icon>
+          </Button>
         </TabList>
 
-        <TabPanels
-          position="absolute"
-          className=" inset-0 flex justify-left items-start z-10 
+        {!hidden && (
+          <TabPanels
+            position="absolute"
+            className=" inset-0 flex justify-left items-start z-10 
         bg-gray-100 shadow-2xl border border-gray-300 
           ml-28 mt-24 mb-2 rounded-2xl "
-        >
-          {data.map((tab, index) => {
-            return (
-              <TabPanel
-                key={index}
-                p={0}
-                className="w-full h-full flex flex-col"
-              >
-                {tab.content}
-              </TabPanel>
-            );
-          })}
-        </TabPanels>
+          >
+            {data.map((tab, index) => {
+              return (
+                <TabPanel
+                  key={index}
+                  p={0}
+                  className="w-full h-full flex flex-col"
+                >
+                  {tab.content}
+                </TabPanel>
+              );
+            })}
+          </TabPanels>
+        )}
       </Tabs>
     );
   }
 
-  return <DataTabs data={tabData} />;
+  return (
+    <>
+      <DataTabs data={tabData} />
+    </>
+  );
 }
 
 export default SideBar;

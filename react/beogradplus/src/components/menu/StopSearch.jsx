@@ -14,29 +14,26 @@ import { useMenuStateContext } from "../../contexts/MenuContext";
 import Pagination from "./Pagination";
 
 export default function StopSearch(props) {
-  //const [stops, setStops] = useState();
   const [searchTerm, setSearchTerm] = useState("");
   const { data, setData, setMenuOption } = useMenuStateContext();
 
   // pretratga stanica sa tajmautom
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
-      //console.log(data);
-      if (searchTerm != "") {
-        //console.log(pageFullUrl);
-        axiosClient.get("/search/stop/" + searchTerm).then((stopsData) => {
-          //console.log(stopsData);
-          setData({
-            title: data.title,
-            vehicles: data.vehicles,
-            stop: null,
-            stops: stopsData.data.paginated,
-            lineStops: null,
-            vehicleType: data.vehicleType,
-          });
+      let pageFullUrl = "/stop";
+      if (searchTerm != "") pageFullUrl = "/search/stop/" + searchTerm;
+      //console.log(pageFullUrl);
+      axiosClient.get(pageFullUrl).then((stopsData) => {
+        console.log(stopsData.data.paginated);
+        setData({
+          title: data.title,
+          vehicles: data.vehicles,
+          stop: null,
+          stops: stopsData.data.paginated,
+          lineStops: null,
+          vehicleType: data.vehicleType,
         });
-      }
-      //else setStops(null);
+      });
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
@@ -51,7 +48,8 @@ export default function StopSearch(props) {
         vehicles: vehicleData.data,
         stop,
         stops: data.stops,
-        lineStops: data.lineStops,
+        mapLoad: true,
+        //lineStops: data.lineStops,
         vehicleType: data.vehicleType,
       });
     });

@@ -8,20 +8,19 @@ import {
   Circle,
   CircleMarker,
   Tooltip,
+  useMapEvents,
 } from "react-leaflet";
 import "../index.css";
 import "leaflet/dist/leaflet.css";
 import * as L from "leaflet";
 import { useMenuStateContext } from "../contexts/MenuContext";
 import stopIconUrl from "../components/map_icons/placeholder.png";
-import redMarker from "../components/map_icons/bus_marker_red.png";
-import blueMarker from "../components/map_icons/bus_marker_blue.png";
-import orangeMarker from "../components/map_icons/bus_marker_orange.png";
+import axiosClient from "../axios-client";
 
 export default function Map() {
-  const { data } = useMenuStateContext();
+  const { data, setMenuOption, setData } = useMenuStateContext();
 
-  const stopPosition = data.stop
+  let stopPosition = data.stop
     ? [data.stop.latitude, data.stop.longitude]
     : null;
   const stopIcon = L.icon({
@@ -42,28 +41,57 @@ export default function Map() {
     : null;
 
   let lineColor = "blue";
-  let vehicleIconUrl = blueMarker;
 
   switch (data.vehicleType) {
     case "tram":
       lineColor = "red";
-      vehicleIconUrl = redMarker;
       break;
     case "trolleybus":
       lineColor = "orange";
-      vehicleIconUrl = orangeMarker;
       break;
     default:
       lineColor = "blue";
-      vehicleIconUrl = blueMarker;
       break;
   }
 
-  let vehicleIcon = L.icon({
-    iconUrl: vehicleIconUrl,
-    iconSize: [50, 50],
-    iconAnchor: [25, 50],
+  const markerHtmlStyles = `
+    background-color: ${lineColor};
+    width: 2.5rem;
+    height: 2.5rem;
+    display: block;
+    position: relative;
+    border-radius: 3rem 3rem 0;
+    transform: rotate(45deg);
+    border: 2px solid #000000;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px; `;
+
+  const vehicleIcon = L.divIcon({
+    className: "",
+    iconSize: [40, 40],
+    iconAnchor: [21, 48],
+    html: `
+    <span style="${markerHtmlStyles}">
+      <p class="relative top-1 text-center text-white -rotate-45 text-lg font-sans">
+        ${data.vehicleLine}
+      </p>
+    </span>`,
   });
+
+  function HandleClick() {
+    const map = useMapEvents({
+      click(e) {
+        axiosClient
+          .post("/stop/nearest", {
+            latitude: e.latlng.lat,
+            longitude: e.latlng.lng,
+          })
+          .then((stop) => {
+            setMenuOption(0);
+            setData({ stops: stop.data });
+          });
+      },
+    });
+  }
 
   return (
     <MapContainer center={[44.802873, 20.452251]} zoom={15} zoomControl={false}>
@@ -72,6 +100,7 @@ export default function Map() {
         //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         url="https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=3e058801b5a045f4b089a9210f52ff28"
       />
+      <HandleClick />
       {/* Izabrana stanica */}
       {stopPosition && (
         <Marker position={stopPosition} icon={stopIcon}></Marker>
@@ -82,25 +111,16 @@ export default function Map() {
           {/* Prikaz linije */}
           <Polyline
             positions={lineStopsPositions}
+            pathOptions={{ stroke: true, color: "black", weight: 7 }}
+          ></Polyline>
+          <Polyline
+            positions={lineStopsPositions}
             pathOptions={{ stroke: true, color: lineColor, weight: 5 }}
           ></Polyline>
 
           {/* Vozilo */}
           {data.vehicleStop && (
-            <>
-              <Marker position={vehicleStopPosition} icon={vehicleIcon}>
-                <Tooltip
-                  direction="center"
-                  position={vehicleStopPosition}
-                  offset={[0, -30]}
-                  opacity={1}
-                  permanent
-                  className="bg-transparent border-none border-0 border-transparent shadow-none shadow-transparent text-white text-lg font-sans"
-                >
-                  {data.vehicleLine}
-                </Tooltip>
-              </Marker>
-            </>
+            <Marker position={vehicleStopPosition} icon={vehicleIcon} />
           )}
 
           {/* Stanice na liniji kao tackice */}
@@ -111,7 +131,7 @@ export default function Map() {
                 radius={3}
                 pathOptions={{
                   stroke: true,
-                  color: "black",
+                  color: "gray",
                   weight: 1,
                   fill: true,
                   fillColor: "white",

@@ -1,4 +1,4 @@
-import React, { createRef } from "react";
+import React from "react";
 
 import { useState } from "react";
 import {
@@ -6,7 +6,6 @@ import {
   Stack,
   Box,
   chakra,
-  Center,
   Alert,
   AlertIcon,
   Avatar,
@@ -17,41 +16,33 @@ import { Link as ChakraLink } from "@chakra-ui/react";
 
 import Field from "../components/guest/Field";
 import Password from "../components/guest/Password";
-import { FaEnvelope, FaLock, FaUserAlt } from "react-icons/fa";
+import { FaLock, FaUserAlt } from "react-icons/fa";
 import axiosClient from "../axios-client";
 import { useStateContext } from "../contexts/ContextProvider";
 
-const Register = () => {
+const ForgotPassword = () => {
   const UserIcon = chakra(FaUserAlt);
-  const LockIcon = chakra(FaLock);
-  const EnvelopeIcon = chakra(FaEnvelope);
 
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const { setUser, setToken } = useStateContext();
   const navigate = useNavigate();
 
-  const nameRef = createRef();
-  const emailRef = createRef();
-  const passwordRef = createRef();
-  const passwordConfirmationRef = createRef();
+  const emailRef = React.createRef();
+  const passwordRef = React.createRef();
 
   const onSubmit = (ev) => {
     ev.preventDefault();
     const payload = {
-      name: nameRef.current.value,
       email: emailRef.current.value,
-      password: passwordRef.current.value,
-      password_confirmation: passwordConfirmationRef.current.value,
     };
 
     axiosClient
-      .post("/register", payload)
+      .post("/forgot-password", payload)
       .then(({ data }) => {
         console.log(data);
-        setUser(data.user);
-        setToken(data.access_token);
         setError(null);
-        navigate("/map");
+        setMessage(data.status);
       })
       .catch((error) => {
         const response = error.response;
@@ -62,8 +53,9 @@ const Register = () => {
   return (
     <>
       <Avatar bg="teal.500" />
-      <Heading color="teal.400">Register</Heading>
+      <Heading color="teal.400">Account recovery</Heading>
       <Box minW={{ base: "90%", md: "468px" }}>
+        {" "}
         <form onSubmit={onSubmit}>
           <Stack
             spacing={4}
@@ -78,29 +70,18 @@ const Register = () => {
               </Alert>
             )}
 
-            <Field
-              ref={nameRef}
-              type="name"
-              placeholder="Name"
-              icon={<UserIcon color="gray.300" />}
-            />
+            {message && (
+              <Alert status="success">
+                <AlertIcon />
+                {message}
+              </Alert>
+            )}
+
             <Field
               ref={emailRef}
               type="email"
               placeholder="Email"
-              icon={<EnvelopeIcon color="gray.300" />}
-            />
-            <Password
-              ref={passwordRef}
-              type="password"
-              placeholder="Password"
-              icon={<LockIcon color="gray.300" />}
-            />
-            <Password
-              ref={passwordConfirmationRef}
-              type="password"
-              placeholder="Confirm Password"
-              icon={<LockIcon color="gray.300" />}
+              icon={<UserIcon color="gray.300" />}
             />
 
             <Button
@@ -110,19 +91,13 @@ const Register = () => {
               colorScheme="teal"
               width="full"
             >
-              Register
+              Send reset link
             </Button>
           </Stack>
         </form>
-        <Box>
-          Already registered?{" "}
-          <ChakraLink as={ReactRouterLink} to="/login" color="teal.500">
-            Log In
-          </ChakraLink>
-        </Box>
       </Box>
     </>
   );
 };
 
-export default Register;
+export default ForgotPassword;

@@ -1,7 +1,16 @@
 import React from "react";
 
 import { useState } from "react";
-import { Button, Stack, Box, chakra, Alert, AlertIcon } from "@chakra-ui/react";
+import {
+  Button,
+  Stack,
+  Box,
+  chakra,
+  Alert,
+  AlertIcon,
+  Avatar,
+  Heading,
+} from "@chakra-ui/react";
 import { Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import { Link as ChakraLink } from "@chakra-ui/react";
 
@@ -45,51 +54,57 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <Stack
-        spacing={4}
-        p="1rem"
-        backgroundColor="whiteAlpha.900"
-        boxShadow="md"
-      >
-        {error && (
-          <Alert status="error">
-            <AlertIcon />
-            {error}
-          </Alert>
-        )}
+    <>
+      <Avatar bg="teal.500" />
+      <Heading color="teal.400">Welcome</Heading>
+      <Box minW={{ base: "90%", md: "468px" }}>
+        <form onSubmit={onSubmit}>
+          <Stack
+            spacing={4}
+            p="1rem"
+            backgroundColor="whiteAlpha.900"
+            boxShadow="md"
+          >
+            {error && (
+              <Alert status="error">
+                <AlertIcon />
+                {error}
+              </Alert>
+            )}
 
-        <Field
-          ref={emailRef}
-          type="email"
-          placeholder="Email"
-          icon={<UserIcon color="gray.300" />}
-        />
-        <Password
-          ref={passwordRef}
-          type="password"
-          placeholder="Password"
-          forgot={true}
-          icon={<LockIcon color="gray.300" />}
-        />
+            <Field
+              ref={emailRef}
+              type="email"
+              placeholder="Email"
+              icon={<UserIcon color="gray.300" />}
+            />
+            <Password
+              ref={passwordRef}
+              type="password"
+              placeholder="Password"
+              forgot={true}
+              icon={<LockIcon color="gray.300" />}
+            />
 
-        <Button
-          borderRadius={0}
-          type="submit"
-          variant="solid"
-          colorScheme="teal"
-          width="full"
-        >
-          Login
-        </Button>
-      </Stack>
-      <Box>
-        Not registered?{" "}
-        <ChakraLink as={ReactRouterLink} to="/register" color="teal.500">
-          Register
-        </ChakraLink>
+            <Button
+              borderRadius={0}
+              type="submit"
+              variant="solid"
+              colorScheme="teal"
+              width="full"
+            >
+              Login
+            </Button>
+          </Stack>
+          <Box>
+            Not registered?{" "}
+            <ChakraLink as={ReactRouterLink} to="/register" color="teal.500">
+              Register
+            </ChakraLink>
+          </Box>
+        </form>
       </Box>
-    </form>
+    </>
   );
 };
 

@@ -9,6 +9,8 @@ import {
   MenuList,
   Text,
   Button,
+  MenuDivider,
+  MenuGroup,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { useStateContext } from "../contexts/ContextProvider";
@@ -37,12 +39,19 @@ export default function Header() {
       <Center ml="auto" mr="5">
         <Menu>
           <MenuButton color="white">
-            <Avatar name={user.name} />
-            <ChevronDownIcon />
+            <Center display="flex" alignItems="center" gap={2}>
+              <Avatar name={user.name} />
+              <ChevronDownIcon boxSize={4} />
+            </Center>
           </MenuButton>
           <MenuList>
-            <MenuItem>{user.name}</MenuItem>
-            <MenuItem>{user.email}</MenuItem>
+            <MenuGroup title="My account">
+              <Flex m={3.5} gap="2" direction="column">
+                <Box>{user.name}</Box>
+                <Box>{user.email}</Box>
+              </Flex>
+            </MenuGroup>
+            <MenuDivider />
             <MenuItem onClick={() => navigate("/login")}>Change user</MenuItem>
             <MenuItem onClick={onLogout}>Log out</MenuItem>
           </MenuList>

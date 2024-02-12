@@ -20,38 +20,38 @@ import Password from "../components/guest/Password";
 import { FaEnvelope, FaLock, FaUserAlt } from "react-icons/fa";
 import axiosClient from "../axios-client";
 import { useStateContext } from "../contexts/ContextProvider";
+import { useQuery } from "../hooks/UseQuery";
 
-const Register = () => {
+const ResetPassword = () => {
   const UserIcon = chakra(FaUserAlt);
   const LockIcon = chakra(FaLock);
   const EnvelopeIcon = chakra(FaEnvelope);
 
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const { setUser, setToken } = useStateContext();
   const navigate = useNavigate();
 
-  const nameRef = createRef();
-  const emailRef = createRef();
+  let query = useQuery();
+
   const passwordRef = createRef();
   const passwordConfirmationRef = createRef();
 
   const onSubmit = (ev) => {
     ev.preventDefault();
     const payload = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
+      email: query.get("email"),
       password: passwordRef.current.value,
       password_confirmation: passwordConfirmationRef.current.value,
+      token: query.get("token"),
     };
 
     axiosClient
-      .post("/register", payload)
+      .post("/reset-password", payload)
       .then(({ data }) => {
         console.log(data);
-        setUser(data.user);
-        setToken(data.access_token);
         setError(null);
-        navigate("/map");
+        setMessage(data.status);
       })
       .catch((error) => {
         const response = error.response;
@@ -62,7 +62,7 @@ const Register = () => {
   return (
     <>
       <Avatar bg="teal.500" />
-      <Heading color="teal.400">Register</Heading>
+      <Heading color="teal.400">Reset Password</Heading>
       <Box minW={{ base: "90%", md: "468px" }}>
         <form onSubmit={onSubmit}>
           <Stack
@@ -78,18 +78,13 @@ const Register = () => {
               </Alert>
             )}
 
-            <Field
-              ref={nameRef}
-              type="name"
-              placeholder="Name"
-              icon={<UserIcon color="gray.300" />}
-            />
-            <Field
-              ref={emailRef}
-              type="email"
-              placeholder="Email"
-              icon={<EnvelopeIcon color="gray.300" />}
-            />
+            {message && (
+              <Alert status="success">
+                <AlertIcon />
+                {message}
+              </Alert>
+            )}
+
             <Password
               ref={passwordRef}
               type="password"
@@ -110,12 +105,11 @@ const Register = () => {
               colorScheme="teal"
               width="full"
             >
-              Register
+              Reset password
             </Button>
           </Stack>
         </form>
         <Box>
-          Already registered?{" "}
           <ChakraLink as={ReactRouterLink} to="/login" color="teal.500">
             Log In
           </ChakraLink>
@@ -125,4 +119,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default ResetPassword;
