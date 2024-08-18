@@ -52,7 +52,7 @@ function SideBar() {
     {
       name: "help",
       icon: TbHelp,
-      content: <>by: Milos & Filip</>,
+      content: <Heading>by: Milos</Heading>,
     },
   ];
 
@@ -118,9 +118,9 @@ function SideBar() {
         {!hidden && (
           <TabPanels
             position="absolute"
-            className=" inset-0 flex justify-left items-start z-10 
+            className={` inset-0 flex justify-left items-start z-10 
         bg-gray-100 shadow-2xl border border-gray-300 
-          ml-28 mt-24 mb-2 rounded-2xl "
+          ml-28 mt-24 mb-2 rounded-2xl`}
           >
             {data.map((tab, index) => {
               return (

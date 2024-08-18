@@ -18,26 +18,28 @@ export default function StopSearch(props) {
   const { data, setData, setMenuOption } = useMenuStateContext();
 
   // pretratga stanica sa tajmautom
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      let pageFullUrl = "/stop";
-      if (searchTerm != "") pageFullUrl = "/search/stop/" + searchTerm;
-      //console.log(pageFullUrl);
-      axiosClient.get(pageFullUrl).then((stopsData) => {
-        console.log(stopsData.data.paginated);
-        setData({
-          title: data.title,
-          vehicles: data.vehicles,
-          stop: null,
-          stops: stopsData.data.paginated,
-          lineStops: null,
-          vehicleType: data.vehicleType,
-        });
+  //useEffect(() => {
+  //const delayDebounceFn = setTimeout(() => {
+  function searchStops() {
+    let pageFullUrl = "/stop";
+    if (searchTerm != "") pageFullUrl = "/search/stop/" + searchTerm;
+    //console.log(pageFullUrl);
+    axiosClient.get(pageFullUrl).then((stopsData) => {
+      console.log(stopsData.data.paginated);
+      setData({
+        title: data.title,
+        //vehicles: data.vehicles,
+        stop: null,
+        stops: stopsData.data.paginated,
+        lineStops: null,
+        //vehicleType: data.vehicleType,
       });
-    }, 300);
+    });
+  }
+  //}, 300);
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm]);
+  //return () => clearTimeout(delayDebounceFn);
+  //}, [searchTerm]);
 
   // otvara tab vozila i postavlja podatke o vozilima
   const openStopVehicles = (stop) => {
@@ -80,7 +82,10 @@ export default function StopSearch(props) {
         </Heading>
       </Center>
       <Input
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          searchStops();
+        }}
         placeholder={props.placeholder}
         ml={3}
         w="90%"

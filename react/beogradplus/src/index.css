@@ -6,7 +6,3 @@
     height: 100vh;
     z-index: 0;
 } 
-
-.leaflet-marker-icon {
-    display: none;
-}

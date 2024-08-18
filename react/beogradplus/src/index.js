@@ -13,8 +13,9 @@ import { MenuContextProvider } from './contexts/MenuContext';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <ChakraProvider>
-        <ContextProvider><RouterProvider router={router} /></ContextProvider>
-        
+        <ContextProvider>
+            <RouterProvider router={router} />
+        </ContextProvider>
     </ChakraProvider>
     
 );

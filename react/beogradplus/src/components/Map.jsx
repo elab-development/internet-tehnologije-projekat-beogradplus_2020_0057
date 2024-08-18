@@ -1,44 +1,26 @@
-import React from "react";
-import {
-  useMap,
-  MapContainer,
-  TileLayer,
-  Marker,
-  Polyline,
-  Circle,
-  CircleMarker,
-  Tooltip,
-  useMapEvents,
-} from "react-leaflet";
-import "../index.css";
+import React, { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, useMap } from "react-leaflet";
+import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import * as L from "leaflet";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import "leaflet-routing-machine";
+import "../index.css";
 import { useMenuStateContext } from "../contexts/MenuContext";
 import stopIconUrl from "../components/map_icons/placeholder.png";
-import axiosClient from "../axios-client";
 
 export default function Map() {
   const { data, setMenuOption, setData } = useMenuStateContext();
+  const [stopMarkerPos, setStopMarker] = useState(null);
 
-  let stopPosition = data.stop
+  const stopPosition = data.stop
     ? [data.stop.latitude, data.stop.longitude]
     : null;
+
   const stopIcon = L.icon({
     iconUrl: stopIconUrl,
     iconSize: [40, 40],
     iconAnchor: [20, 40],
   });
-
-  let lineStopsPositions = [];
-  if (data.lineStops) {
-    data.lineStops.map((stop) => {
-      lineStopsPositions.push([stop.latitude, stop.longitude]);
-    });
-  }
-
-  const vehicleStopPosition = data.vehicleStop
-    ? [data.vehicleStop.lat, data.vehicleStop.lon]
-    : null;
 
   let lineColor = "blue";
 
@@ -63,7 +45,8 @@ export default function Map() {
     border-radius: 3rem 3rem 0;
     transform: rotate(45deg);
     border: 2px solid #000000;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px; `;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px; 
+  `;
 
   const vehicleIcon = L.divIcon({
     className: "",
@@ -77,70 +60,62 @@ export default function Map() {
     </span>`,
   });
 
-  function HandleClick() {
-    const map = useMapEvents({
-      click(e) {
-        axiosClient
-          .post("/stop/nearest", {
-            latitude: e.latlng.lat,
-            longitude: e.latlng.lng,
-          })
-          .then((stop) => {
-            setMenuOption(0);
-            setData({ stops: stop.data });
-          });
-      },
-    });
-  }
+  const RoutingControl = ({ waypoints }) => {
+    const map = useMap();
+
+    useEffect(() => {
+      if (map && waypoints.length > 1) {
+        // srediti ovaj routing control, prikazuje putanje izmedju stanica cudno
+        const routingControl = L.Routing.control({
+          waypoints: waypoints.map((stop) =>
+            L.latLng(stop.latitude, stop.longitude)
+          ),
+          routeWhileDragging: true,
+          // TODO dodati ove bele markere da se ucitavaju pravilno
+          // createMarker: (i, wp, nWps) => {
+          //   return L.circleMarker(wp.latLng, {
+          //     radius: 3,
+          //     stroke: true,
+          //     color: "black",
+          //     weight: 1,
+          //     fill: true,
+          //     fillColor: "white",
+          //     fillOpacity: 1,
+          //     zIndex: 1000,
+          //   }).bindPopup(`Stop ${i + 1}: ${data.lineStops[i].name}`);
+          // },
+          lineOptions: {
+            styles: [{ color: lineColor, weight: 5, stroke: true }],
+          },
+          show: false,
+        }).addTo(map);
+
+        return () => map.removeControl(routingControl);
+      }
+    }, [map, waypoints]);
+
+    return null;
+  };
 
   return (
-    <MapContainer center={[44.802873, 20.452251]} zoom={15} zoomControl={false}>
+    <MapContainer
+      center={stopPosition || [44.7866, 20.4489]}
+      zoom={13}
+      style={{ height: "100%", width: "100%" }}
+    >
       <TileLayer
+        // url="https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=3e058801b5a045f4b089a9210f52ff28"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        //url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        url="https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=3e058801b5a045f4b089a9210f52ff28"
       />
-      <HandleClick />
-      {/* Izabrana stanica */}
-      {stopPosition && (
-        <Marker position={stopPosition} icon={stopIcon}></Marker>
+      {stopPosition && <Marker position={stopPosition} icon={stopIcon} />}
+      {stopMarkerPos && <Marker position={stopMarkerPos} icon={stopIcon} />}
+      // TODO dodati vehicle marker kako treba
+      {data.vehiclePosition && ( // Add the vehicle marker
+        <Marker position={data.vehiclePosition} icon={vehicleIcon} />
       )}
-
-      {lineStopsPositions && (
-        <>
-          {/* Prikaz linije */}
-          <Polyline
-            positions={lineStopsPositions}
-            pathOptions={{ stroke: true, color: "black", weight: 7 }}
-          ></Polyline>
-          <Polyline
-            positions={lineStopsPositions}
-            pathOptions={{ stroke: true, color: lineColor, weight: 5 }}
-          ></Polyline>
-
-          {/* Vozilo */}
-          {data.vehicleStop && (
-            <Marker position={vehicleStopPosition} icon={vehicleIcon} />
-          )}
-
-          {/* Stanice na liniji kao tackice */}
-          {lineStopsPositions.map((stop) => {
-            return (
-              <CircleMarker
-                center={{ lat: stop[0], lng: stop[1] }}
-                radius={3}
-                pathOptions={{
-                  stroke: true,
-                  color: "gray",
-                  weight: 1,
-                  fill: true,
-                  fillColor: "white",
-                  fillOpacity: 1,
-                }}
-              ></CircleMarker>
-            );
-          })}
-        </>
+      {data.lineStops && data.lineStops.length > 1 && (
+        <RoutingControl waypoints={data.lineStops} />
       )}
     </MapContainer>
   );
