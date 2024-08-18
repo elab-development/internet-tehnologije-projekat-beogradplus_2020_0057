@@ -16,6 +16,10 @@ export default function Map() {
     ? [data.stop.latitude, data.stop.longitude]
     : null;
 
+  const vehicleStopPosition = data.vehicleStop
+    ? [data.vehicleStop.lat, data.vehicleStop.lon]
+    : null;
+
   const stopIcon = L.icon({
     iconUrl: stopIconUrl,
     iconSize: [40, 40],
@@ -72,20 +76,25 @@ export default function Map() {
           ),
           routeWhileDragging: true,
           // TODO dodati ove bele markere da se ucitavaju pravilno
-          // createMarker: (i, wp, nWps) => {
-          //   return L.circleMarker(wp.latLng, {
-          //     radius: 3,
-          //     stroke: true,
-          //     color: "black",
-          //     weight: 1,
-          //     fill: true,
-          //     fillColor: "white",
-          //     fillOpacity: 1,
-          //     zIndex: 1000,
-          //   }).bindPopup(`Stop ${i + 1}: ${data.lineStops[i].name}`);
-          // },
+          createMarker: (i, wp, nWps) => {
+            return L.circleMarker(wp.latLng, {
+              radius: 3,
+              stroke: true,
+              color: "black",
+              weight: 1,
+              fill: true,
+              fillColor: "white",
+              fillOpacity: 1,
+            }).bindPopup(`Stop ${i + 1}: ${data.lineStops[i].name}`);
+          },
           lineOptions: {
-            styles: [{ color: lineColor, weight: 5, stroke: true }],
+            styles: [
+              {
+                color: lineColor,
+                weight: 5,
+                stroke: true,
+              },
+            ],
           },
           show: false,
         }).addTo(map);
@@ -110,9 +119,8 @@ export default function Map() {
       />
       {stopPosition && <Marker position={stopPosition} icon={stopIcon} />}
       {stopMarkerPos && <Marker position={stopMarkerPos} icon={stopIcon} />}
-      // TODO dodati vehicle marker kako treba
-      {data.vehiclePosition && ( // Add the vehicle marker
-        <Marker position={data.vehiclePosition} icon={vehicleIcon} />
+      {data.vehicleStop && ( // Add the vehicle marker
+        <Marker position={vehicleStopPosition} icon={vehicleIcon} />
       )}
       {data.lineStops && data.lineStops.length > 1 && (
         <RoutingControl waypoints={data.lineStops} />
